@@ -1,74 +1,1976 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <style>
+.hex-map-visualisation {
+    display: inline-block;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    background: #282828;
+    position: relative;
+    width: 100%;
+}
 
-body,html{max-width:100%;overflow-x:hidden;margin:0}.hex-map-visualisation{display:inline-block;scrollbar-width:none;-ms-overflow-style:none;background:#282828;position:relative;width:100%}.hex-map-visualisation::-webkit-scrollbar{width:0;height:0}.unboldDate{font-weight:500}.unbold{font-weight:450}.hex-map-visualisation h1,.hex-map-visualisation h2,.hex-map-visualisation h3,.hex-map-visualisation h4,.hex-map-visualisation p,li{font-family:acumin-pro-extra-condensed,sans-serif;color:#fff}.hex-map-visualisation .clear:after{content:"";display:block;clear:both}.hex-map-visualisation .map-inner{overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}.hex-map-visualisation .map-inner::-webkit-scrollbar{width:0;height:0}.headerWrap{width:100%;text-align:center}.hex-map-visualisation #visual-title{text-transform:uppercase;line-height:45px;font-size:54px;display:inline-block;padding-bottom:20px;font-family:acumin-pro-extra-condensed,sans-serif!important;color:#fff}.hex-map-visualisation .visual-information{position:absolute;pointer-events:none;width:100%;z-index:500;margin:auto;display:table}.hex-map-visualisation .visual-information .title-sections,.hex-map-visualisation .visual-information .title-sections-mobile{display:flex;flex-direction:column;width:40%;min-width:440px;max-width:560px;float:left}.hex-map-visualisation .visual-information .title-sections .target,.hex-map-visualisation .visual-information .title-sections-mobile .target{background:rgba(0,0,0,.64);margin-left:20px;border-radius:7px;visibility:hidden}.hex-map-visualisation .visual-information .title-sections .target h1,.hex-map-visualisation .visual-information .title-sections-mobile .target h1{margin:0}.hex-map-visualisation .visual-information .title-sections .target .target-figures .leave,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave{width:73%;display:inline-block;line-height:20px;text-align:left;font-family:acumin-pro-extra-condensed,sans-serif!important}.hex-map-visualisation .visual-information .title-sections .target .target-figures .remain,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain{width:22%;display:inline-block;line-height:20px;text-align:left;font-size:25px;margin-left:20px;font-family:acumin-pro-extra-condensed,sans-serif!important}.hex-map-visualisation .visual-information .title-sections .target .target-figures .leave span,.hex-map-visualisation .visual-information .title-sections .target .target-figures .remain span,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave span,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain span{width:100%;display:inline-block}.hex-map-visualisation .visual-information .title-sections .target .target-figures .leave span.percent,.hex-map-visualisation .visual-information .title-sections .target .target-figures .remain span.percent,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave span.percent,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain span.percent{font-size:48px}.hex-map-visualisation .visual-information .title-sections .target .target-figures .leave span.number,.hex-map-visualisation .visual-information .title-sections .target .target-figures .remain span.number,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave span.number,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain span.number{font-size:22px;margin-top:5px}.hex-map-visualisation .visual-information .title-sections-mobile{width:100%;position:absolute;bottom:33%}.hex-map-visualisation .visual-information .title-sections-mobile .target{margin-left:0}.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures{display:flex}.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave{width:85%}.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain{width:15%}.hex-map-visualisation .map-keys{display:flex;justify-content:center;margin:20px 0 20px 0}.hex-map-visualisation .map-keys .map-key-single p{display:inline;padding:10px 20px;font-size:22px;line-height:34px}.hex-map-visualisation .map-keys .map-key-single ul{display:inline}.hex-map-visualisation .hex-grid,.hex-map-visualisation .keys{position:relative;margin:0 auto;padding:0}.hex-map-visualisation .hex-grid li,.hex-map-visualisation .keys li{list-style-type:none;position:relative;float:left;cursor:pointer;-o-transform:rotate(-60deg) skewY(30deg);-moz-transform:rotate(-60deg) skewY(30deg);-webkit-transform:rotate(-60deg) skewY(30deg);-ms-transform:rotate(-60deg) skewY(30deg);transform:rotate(-60deg) skewY(30deg);background:#fd005f;overflow:hidden;visibility:hidden}.hex-map-visualisation .hex-grid li *,.hex-map-visualisation .keys li *{visibility:visible}.hex-map-visualisation .hex-grid li .hexagon,.hex-map-visualisation .keys li .hexagon{position:absolute;top:0;left:0;width:100%;height:100%;background:#fdbf00;-o-transform:skewY(-30deg) rotate(60deg);-moz-transform:skewY(-30deg) rotate(60deg);-webkit-transform:skewY(-30deg) rotate(60deg);-ms-transform:skewY(-30deg) rotate(60deg);transform:skewY(-30deg) rotate(60deg);overflow:hidden;transition:all 1s ease-in-out}.hex-map-visualisation .hex-grid li .explodes{transition:all .5s ease-in-out;background:radial-gradient(circle,rgba(255,0,0,1) 0,rgba(161,11,11,1) 49%)}.hex-map-visualisation .hex-grid li .explodes:hover{opacity:.5}.hex-map-visualisation .hex-grid li .style-0,.hex-map-visualisation .keys li .style-0{background:#ffcb00}.style-1:hover{background-color:#668d76;opacity:.5}.hex-map-visualisation .hex-grid li .style-1,.hex-map-visualisation .keys li .style-1{background-color:#1a5432}.hex-map-visualisation .hex-grid li .style-2,.hex-map-visualisation .keys li .style-2{background:#51bcd7}.hex-map-visualisation .hex-grid li .style-3,.hex-map-visualisation .keys li .style-3{background:#668d76}.hex-map-visualisation .hex-grid li.translate,.hex-map-visualisation .keys li.translate{margin-top:-8px;-o-transform:translateX(50%) rotate(-60deg) skewY(30deg);-moz-transform:translateX(50%) rotate(-60deg) skewY(30deg);-webkit-transform:translateX(50%) rotate(-60deg) skewY(30deg);-ms-transform:translateX(50%) rotate(-60deg) skewY(30deg);transform:translateX(50%) rotate(-60deg) skewY(30deg)}.hex-map-visualisation .keys li{padding:16px 14px}@media screen and (max-width:1200px){.hex-map-visualisation #visual-title{line-height:45px;font-size:48px}.hex-map-visualisation .visual-information .title-sections .target .target-figures .leave,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave{width:80%;display:inline-block;line-height:30px;height:100%}.hex-map-visualisation .visual-information .title-sections .target .target-figures .remain,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain{width:15%;display:inline-block;line-height:30px;height:100%}.hex-map-visualisation .visual-information .title-sections .target .target-figures .leave span.percent,.hex-map-visualisation .visual-information .title-sections .target .target-figures .remain span.percent,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave span.percent,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain span.percent{font-size:36px}.hex-map-visualisation .visual-information .title-sections .target .target-figures .leave span.number,.hex-map-visualisation .visual-information .title-sections .target .target-figures .remain span.number,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave span.number,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain span.number{font-size:20px;margin-top:3px}.hex-map-visualisation .visual-information .title-sections-mobile .target{margin-left:0}.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures{display:flex}}@media screen and (max-width:768px){.hex-map-visualisation #visual-title{line-height:45px;font-size:42px}.hex-map-visualisation .visual-information .title-sections .target .target-figures .leave,.hex-map-visualisation .visual-information .title-sections .target .target-figures .remain,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain{display:inline-block;line-height:30px}.hex-map-visualisation .visual-information .title-sections .target .target-figures .leave span.percent,.hex-map-visualisation .visual-information .title-sections .target .target-figures .remain span.percent,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave span.percent,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain span.percent{font-size:36px}.hex-map-visualisation .visual-information .title-sections .target .target-figures .leave span.number,.hex-map-visualisation .visual-information .title-sections .target .target-figures .remain span.number,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave span.number,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain span.number{font-size:20px;margin-top:3px}.hex-map-visualisation .visual-information .title-sections-mobile{width:100%}.hex-map-visualisation .visual-information .title-sections-mobile .target{margin-left:0}.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures{display:flex}.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain{width:50%}.legend{display:none}}@media screen and (max-width:1000px){.hex-map-visualisation #visual-title{line-height:45px}.hex-map-visualisation .visual-information .title-sections .target .target-figures .remain,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain{width:23%;display:inline-block;line-height:30px;font-size:24px;margin-left:4px}.hex-map-visualisation .visual-information .title-sections .target .target-figures .leave,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave{width:70%;display:inline-block;line-height:30px;font-size:24px}.noStrikesReported{font-size:24px}.hex-map-visualisation .visual-information .title-sections .target .target-figures .leave span.percent,.hex-map-visualisation .visual-information .title-sections .target .target-figures .remain span.percent,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave span.percent,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain span.percent{font-size:15px}.hex-map-visualisation .visual-information .title-sections-mobile .target{margin-left:0}.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures{display:flex}.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain{width:50%}.hex-map-visualisation .visual-information .title-sections .target,.hex-map-visualisation .visual-information .title-sections-mobile .target{width:73%}}@media screen and (max-width:600px){.hex-map-visualisation .visual-map .map-inner .hex-grid,.hex-map-visualisation .visual-map .map-inner .keys{transform:scale(.6);margin-left:-30px}.visual-component{margin-top:-50px}}@media screen and (max-width:400px){.hex-map-visualisation .visual-map .map-inner .hex-grid,.hex-map-visualisation .visual-map .map-inner .keys{margin-left:-75px}}@media screen and (max-width:540px){.hex-map-visualisation .visual-map .map-inner .hex-grid,.hex-map-visualisation .visual-map .map-inner .keys{margin-left:-40px}.hex-map-visualisation .visual-information .title-sections .target .target-figures .remain,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain{width:23%;display:inline-block;line-height:30px;font-size:21px;margin-left:4px}.provinceName{font-size:26px}.hex-map-visualisation .visual-information .title-sections .target .target-figures .leave,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave{width:75%;display:inline-block;line-height:30px;font-size:21px}.noStrikesReported{font-size:21px}}.range{position:relative;width:100%;height:5px}.range input{width:100%;position:absolute;top:2px;height:0;-webkit-appearance:none}.range input::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;margin:-8px 0 0;border-radius:50%;background:#37adbf;cursor:pointer;border:0!important}.range input::-moz-range-thumb{width:18px;height:18px;margin:-8px 0 0;border-radius:50%;background:#37adbf;cursor:pointer;border:0!important}.range input::-ms-thumb{width:18px;height:18px;margin:-8px 0 0;border-radius:50%;background:#37adbf;cursor:pointer;border:0!important}.range input::-webkit-slider-runnable-track{width:90%;height:2px;cursor:pointer;background:#b2b2b2}.range input::-moz-range-track{width:90%;height:2px;cursor:pointer;background:#b2b2b2}.range input::-ms-track{width:90%;height:2px;cursor:pointer;background:#b2b2b2}.range input:focus{background:0 0;outline:0}.range input::-ms-track{width:90%;cursor:pointer;background:0 0;border-color:transparent;color:transparent}.range-labels{margin:15px -3.1% 0;padding:0;list-style:none;width:108.4%}.range-labels li{position:relative;float:left;width:7%;text-align:center;color:#b2b2b2;font-size:18px;cursor:pointer}.range-labels .selected::before{background:#37adbf}.range-labels .active.selected::before{display:none}.buttonDiv{text-align:center}.headerWrap{white-space:nowrap}.incrementTime{background:#282828;border-color:transparent;color:#fff;font-size:30px;border-radius:4px;font-family:AcuminProCond-Bold;display:inline-block}.fa-play{color:#39b609}.fa-pause{color:red}.fa-play:hover{cursor:pointer}.fa-pause{cursor:pointer}#afghanistanTitle{position:absolute;margin-left:38%;letter-spacing:8px;top:30%;font-size:35px;transform:rotate(-40deg)}#pakistanTitle{width:1.5em;text-align:center;position:absolute;margin-left:53%;letter-spacing:8px;top:63%;font-size:35px;transform:rotate(-40deg)}@media only screen and (max-width:1100px){#pakistanTitle{top:60%;margin-left:58%}#afghanistanTitle{margin-left:30%}}@-webkit-keyframes Gradient{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}.noStrikesReported{text-align:center;margin:2%}.rectWrapper{width:130px;height:80px;background:gray;opacity:.5;position:absolute;float:right;font-size:60px;text-decoration:underline;right:0;z-index:100;border-radius:25px 0 0 25px;top:13%;pointer-events:none}.dateHeader{position:absolute;float:right;font-size:50px;text-decoration:underline;right:3%;top:11%;z-index:100;color:#fff!important;pointer-events:none;font-family:acumin-pro-extra-condensed,sans-serif!important}@media only screen and (max-width:785px){.rectWrapper{width:240px;height:120px}.dateHeader{font-size:60px;top:9%}}@media only screen and (max-width:687px){#pakistanTitle{top:63%;margin-left:57%}#afghanistanTitle{margin-left:26%;top:30%}.dateHeader{display:none}.rectWrapper{display:none}}@media screen and (max-width:500px){.hex-map-visualisation .visual-map .map-inner .hex-grid,.hex-map-visualisation .visual-map .map-inner .keys{transform:scale(.7)}#pakistanTitle{top:62%;margin-left:68%;font-size:32px}#afghanistanTitle{margin-left:22%;top:38%;font-size:32px}}@media only screen and (max-width:500px){.range-labels li:nth-of-type(2n){display:none}.range-labels li{position:relative;float:left;width:14%;text-align:center;color:#b2b2b2;font-size:18px;cursor:pointer}.hex-map-visualisation .visual-information .title-sections .target,.hex-map-visualisation .visual-information .title-sections-mobile .target{width:60%;margin-left:5px}.dateHeader{display:none}.rectWrapper{display:none}.title-sections{width:100%}}@media only screen and (max-width:390px){.hex-map-visualisation .visual-map .map-inner .hex-grid,.hex-map-visualisation .visual-map .map-inner .keys{transform:scale(.5);margin-left:-60px}#visual-title{font-size:35px;margin-bottom:-10px}.dateHeader{font-size:30px;text-decoration:underline;top:19%}.rectWrapper{width:110px;height:55px}#pakistanTitle{top:63%;margin-left:54%;font-size:23px}#afghanistanTitle{margin-left:20%;top:42%;font-size:20px}.hex-map-visualisation .visual-information .title-sections .target,.hex-map-visualisation .visual-information .title-sections-mobile .target{width:40%;margin-left:5px}.hex-map-visualisation .visual-information .title-sections .target .target-figures .remain,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain{width:19%;display:inline-block;line-height:30px;font-size:19px}.noStrikesReported{font-size:18px;font-family:acumin-pro-extra-condensed,sans-serif!important}.provinceName{font-size:26px}.hex-map-visualisation .visual-information .title-sections .target .target-figures .leave,.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave{width:57%;display:inline-block;line-height:17px;font-size:19px;margin-left:34px}}.legend{background:rgb(128,128,128,.14);width:150px;height:280px;position:absolute;right:0;bottom:24%;border-radius:20px 0 0 20px}.bombedTiles{width:30px;height:30px;background:radial-gradient(circle,rgba(255,0,0,1) 0,rgba(161,11,11,1) 49%);border-radius:7px;margin-top:10%;margin-left:7%}.afghanistanTiles{width:30px;height:30px;background:#51bcd7;border-radius:7px;margin-top:11%;margin-left:7%}.provinceName{text-align:center}.notProvinceTiles{width:30px;height:30px;background:#668d76;border-radius:7px;margin-top:11%;margin-left:7%}.inactiveTiles{width:30px;height:30px;background:#1a5432;border-radius:7px;margin-top:11%;margin-left:7%}.legend-label{text-align:center;margin-left:3%;line-height:20px}.bombed-label{position:absolute;font-size:20px;top:16.5%;margin-left:34%;line-height:20px}.afghanistan-label{position:absolute;font-size:20px;top:37%;margin-left:34%;line-height:20px}.notprovince-label{position:absolute;font-size:20px;top:49%;margin-left:34%;line-height:20px}.inactive-label{position:absolute;font-size:20px;top:67%;margin-left:34%;line-height:20px}@media screen and (max-width:1200px){.legend{width:160px;height:260px;position:absolute;right:-1%;bottom:24%;border-radius:20px}.bombedTiles{width:20px;height:20px;background:radial-gradient(circle,rgba(255,0,0,1) 0,rgba(161,11,11,1) 49%);border-radius:7px;margin-top:10%;margin-left:7%}.afghanistanTiles{width:20px;height:20px;background:#51bcd7;border-radius:7px;margin-top:11%;margin-left:7%}.provinceName{text-align:center}.notProvinceTiles{width:20px;height:20px}.inactiveTiles{width:20px;height:20px}.legend-label{text-align:center;margin-left:3%}.bombed-label{position:absolute;font-size:13px;top:29.5%;margin-left:25%}.afghanistan-label{position:absolute;font-size:13px;top:45%;margin-left:25%}.notprovince-label{position:absolute;font-size:13px;top:58.5%;margin-left:25%}.inactive-label{position:absolute;font-size:13px;top:74%;margin-left:25%}}@media screen and (max-width:1100px){.legend{display:none}}@media screen and (max-width:950px){.hex-map-visualisation .visual-map .map-inner .hex-grid,.hex-map-visualisation .visual-map .map-inner .keys{transform:scale(.3);margin-bottom:-29px;margin-top:-50px}}.playPauseImages{width:20px}.playimage{width:25px}.incrementTime:focus{outline:0}
+.tableRows {
+    font-size: 24px !important;
+    text-align: left !important;
+    font-family: "acumin-pro-extra-condensed",sans-serif !important;
 
-</style>
+}
 
-        <div class="hex-map-visualisation">
-            <div class="page visual-map" ng-app="myApp" ng-controller="myController" id="myController">
-                <div class="headerWrap"><div class="" id="visual-title">Dronestrikes in Northwestern Pakistan <div class="unboldDate">(2004 - 2017)<button class="incrementTime"><i class="fa fa-play"></i></button></div> 
-                </div></div>
-                <div class="rectWrapper"></div>
-                <h1 class="dateHeader"></h1>
+.hex-map-visualisation::-webkit-scrollbar {
+    width: 0;
+    height: 0
+}
+.table-fit {
+    width: 1px;
+}
+
+.unboldDate {
+    font-weight: 500;
+}
+
+.unbold {
+    font-weight: 450;
+}
+
+.hex-map-visualisation h1,
+.hex-map-visualisation h2,
+.hex-map-visualisation h3,
+.hex-map-visualisation h4,
+.hex-map-visualisation p,
+li {
+    font-family: "acumin-pro-extra-condensed", "sans-serif";
+    color: #fff;
+}
+
+.hex-map-visualisation .clear:after {
+    content: "";
+    display: block;
+    clear: both
+}
+
+.hex-map-visualisation .map-inner {
+    overflow: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none
+}
+
+.hex-map-visualisation .map-inner::-webkit-scrollbar {
+    width: 0;
+    height: 0
+}
+
+.headerWrap {
+    width: 100%;
+    text-align: center;
+
+}
+
+.hex-map-visualisation #visual-title {
+    white-space: normal;
+    text-transform: uppercase;
+    line-height: 45px;
+    font-size: 54px;
+    display: inline-block;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    font-family: "acumin-pro-extra-condensed",sans-serif !important;
+    color: white;
+}
+
+.hex-map-visualisation .visual-information {
+    position: absolute;
+    pointer-events: none;
+    width: 100%;
+    z-index: 500;
+    margin: auto;
+    display: table
+}
+
+.hex-map-visualisation .visual-information .title-sections,
+.hex-map-visualisation .visual-information .title-sections-mobile {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    min-width: 440px;
+    max-width: 560px;
+    float: left;
+}
+
+.hex-map-visualisation .visual-information .title-sections .target,
+.hex-map-visualisation .visual-information .title-sections-mobile .target {
+    background: rgba(0, 0, 0, 0.67);
+    margin-left: 20px;
+    border-radius: 7px;
+    visibility: hidden
+}
+
+.hex-map-visualisation .visual-information .title-sections .target h1,
+.hex-map-visualisation .visual-information .title-sections-mobile .target h1 {
+    margin: 0;
+    text-align: center;
+}
+
+.hex-map-visualisation .visual-information .title-sections .target .target-figures .leave,
+.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave {
+    width: 73%;
+    display: inline-block;
+    line-height: 20px;
+    text-align: left;
+    font-family: "acumin-pro-extra-condensed",sans-serif !important;
     
-                <div class="visual-information">
-                    <div class="title-sections">
-                        <div class="target topLeft">
-                            <h1 class="provinceName">{{viewable.area}}</h1>
-                            <h2 class="noStrikesReported">No strikes reported</h2>
-                            <div class="target-figures">
+}
+.hex-map-visualisation .visual-information .title-sections .target .target-figures .remain,
+.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain {
+    width: 22%;
+    display: inline-block;
+    line-height: 20px;
+    text-align: left;
+    font-size: 25px;
+    margin-left: 20px;
+    font-family: "acumin-pro-extra-condensed",sans-serif !important
+}    
+
+
+.hex-map-visualisation .visual-information .title-sections .target .target-figures .leave span,
+.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave span,
+.hex-map-visualisation .visual-information .title-sections .target .target-figures .remain span,
+.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain span {
+    width: 100%;
+    display: inline-block
+}
+
+.hex-map-visualisation .visual-information .title-sections .target .target-figures .leave span.percent,
+.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave span.percent,
+.hex-map-visualisation .visual-information .title-sections .target .target-figures .remain span.percent,
+.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain span.percent {
+    font-size: 48px
+}
+
+.hex-map-visualisation .visual-information .title-sections .target .target-figures .leave span.number,
+.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave span.number,
+.hex-map-visualisation .visual-information .title-sections .target .target-figures .remain span.number,
+.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain span.number {
+    font-size: 22px;
+    margin-top: 5px
+}
+
+.hex-map-visualisation .visual-information .title-sections-mobile {
+    width: 100%;
+    position: absolute;
+    bottom: 33%
+}
+
+.hex-map-visualisation .visual-information .title-sections-mobile .target {
+    margin-left: 0
+}
+
+.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures {
+    display: flex
+}
+
+.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave {
+    width: 85%
+}
+
+.legend {
+    background: rgb(128, 128, 128, 0.14);
+    width: 16%;
+    height: 37%;
+    position: absolute;
+    right: 0;
+    bottom: 24%;
+    border-radius: 20px 0px 0px 20px;
+    text-align: right;
+    font-family: "acumin-pro-extra-condensed",sans-serif !important;
+  }
+
+  .legend-label {
+      text-align:center;
+      margin: 2% auto;
+  }
+
+  .bombedTiles {
+    width: 1.5em;
+    height: 1.5em;
+    background: radial-gradient(circle, rgba(255,0,0,1) 0%, rgba(161,11,11,1) 49%);
+    border-radius: 7px;
+}
+
+.inactiveTiles {
+    width: 1.5em;
+    height: 1.5em;
+    background: #1A5432;
+    border-radius: 7px;
+  }
+
+.afghanistanTiles {
+  width: 1.5em;
+  height: 1.5em;
+  background: #51BCD7;
+  border-radius: 7px;
+}
+
+
+.notProvinceTiles {
+  width: 1.5em;
+  height: 1.5em;
+  background: #668D76;
+  border-radius: 7px;
+ 
+}
+
+
+.hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain {
+    width: 15%;
+}
+.hex-map-visualisation .map-keys {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0 20px 0
+}
+
+.hex-map-visualisation .map-keys .map-key-single p {
+    display: inline;
+    padding: 10px 20px;
+    font-size: 22px;
+    line-height: 34px
+}
+
+.hex-map-visualisation .map-keys .map-key-single ul {
+    display: inline
+}
+
+.hex-map-visualisation .hex-grid,
+.hex-map-visualisation .keys {
+    position: relative;
+    margin: 0 auto;
+    padding: 0
+}
+
+.hex-map-visualisation .hex-grid li,
+.hex-map-visualisation .keys li {
+    list-style-type: none;
+    position: relative;
+    float: left;
+    cursor: pointer;
+    -o-transform: rotate(-60deg) skewY(30deg);
+    -moz-transform: rotate(-60deg) skewY(30deg);
+    -webkit-transform: rotate(-60deg) skewY(30deg);
+    -ms-transform: rotate(-60deg) skewY(30deg);
+    transform: rotate(-60deg) skewY(30deg);
+    background: #fd005f;
+    overflow: hidden;
+    visibility: hidden
+}
+
+.hex-map-visualisation .hex-grid li *,
+.hex-map-visualisation .keys li * {
+    visibility: visible
+}
+
+.hex-map-visualisation .hex-grid li .hexagon,
+.hex-map-visualisation .keys li .hexagon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fdbf00;
+    -o-transform: skewY(-30deg) rotate(60deg);
+    -moz-transform: skewY(-30deg) rotate(60deg);
+    -webkit-transform: skewY(-30deg) rotate(60deg);
+    -ms-transform: skewY(-30deg) rotate(60deg);
+    transform: skewY(-30deg) rotate(60deg);
+    overflow: hidden;
+    transition: all 1s ease-in-out;
+
+}
+
+.hex-map-visualisation .hex-grid li .explodes{
+    transition: all 0.5s ease-in-out;
+    background: radial-gradient(circle, rgba(255,0,0,1) 0%, rgba(161,11,11,1) 49%);
+}
+
+.hex-map-visualisation .hex-grid li .explodes:hover{
+    opacity: 0.5;
+}
+
+.hex-map-visualisation .hex-grid li .style-0,
+.hex-map-visualisation .keys li .style-0 {
+    background: #ffcb00
+}
+
+.style-1:hover {
+    background-color: #668D76;
+    opacity: 0.5;
+}
+.hex-map-visualisation .hex-grid li .style-1,
+.hex-map-visualisation .keys li .style-1 {
+    background-color: #1A5432;
+}
+
+.hex-map-visualisation .hex-grid li .style-2,
+.hex-map-visualisation .keys li .style-2 {
+    background: #51BCD7;
+
+}
+
+.hex-map-visualisation .hex-grid li .style-3,
+.hex-map-visualisation .keys li .style-3 {
+    background: #668D76
+
+}
+
+.tile-labels {
+    text-align: left;
+    font-size: 1.8rem;
+    line-height: 1.8rem;
+    margin-bottom: 0.6rem;
+}
+
+.hex-map-visualisation .hex-grid li .style-4,
+.hex-map-visualisation .keys li .style-4 {
+    background: black;
+    text-align: center;
+    font-size: 27px;
+}
+
+.hex-map-visualisation .hex-grid li .style-5,
+.hex-map-visualisation .keys li .style-5 {
+    background: black;
+    text-align: center;
+    font-size: 27px;
+    
+}
+
+
+.hex-map-visualisation .hex-grid li.translate,
+.hex-map-visualisation .keys li.translate {
+    margin-top: -8px;
+    -o-transform: translateX(50%) rotate(-60deg) skewY(30deg);
+    -moz-transform: translateX(50%) rotate(-60deg) skewY(30deg);
+    -webkit-transform: translateX(50%) rotate(-60deg) skewY(30deg);
+    -ms-transform: translateX(50%) rotate(-60deg) skewY(30deg);
+    transform: translateX(50%) rotate(-60deg) skewY(30deg)
+}
+
+.hex-map-visualisation .keys li {
+    padding: 16px 14px
+}
+
+@media screen and (max-width: 1200px) {
+    .hex-map-visualisation #visual-title {
+        line-height: 45px;
+        font-size: 48px
+    }
+
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .leave,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave {
+        width: 80%;
+        display: inline-block;
+        line-height: 30px;
+        height: 100%;
+    }
+
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .remain,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain {
+        width: 15%;
+        display: inline-block;
+        line-height: 30px;
+        height: 100%;
+    }
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .leave span.percent,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave span.percent,
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .remain span.percent,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain span.percent {
+        font-size: 36px
+    }
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .leave span.number,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave span.number,
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .remain span.number,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain span.number {
+        font-size: 20px;
+        margin-top: 3px
+    }
+    .hex-map-visualisation .visual-information .title-sections-mobile .target {
+        margin-left: 0
+    }
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures {
+        display: flex
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .hex-map-visualisation #visual-title {
+        line-height: 45px;
+        font-size: 42px
+    }
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .leave,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave,
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .remain,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain {
+        display: inline-block;
+        line-height: 30px
+    }
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .leave span.percent,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave span.percent,
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .remain span.percent,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain span.percent {
+        font-size: 36px
+    }
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .leave span.number,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave span.number,
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .remain span.number,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain span.number {
+        font-size: 20px;
+        margin-top: 3px
+    }
+    .hex-map-visualisation .visual-information .title-sections-mobile {
+        width: 100%
+    }
+    .hex-map-visualisation .visual-information .title-sections-mobile .target {
+        margin-left: 0
+    }
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures {
+        display: flex
+    }
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain {
+        width: 50%
+    }
+
+    .legend {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .hex-map-visualisation #visual-title {
+        line-height: 45px;
+    }
+
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .remain,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain {
+        width: 23%;
+        display: inline-block;
+        line-height: 30px;
+        font-size: 24px;
+        margin-left: 4px;
+
+    }
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .leave,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave {
+        width: 70%;
+        display: inline-block;
+        line-height: 30px;
+        font-size: 24px;
+
+    }
+
+    .dataInside {
+        font-size: 55px;
+    }
+    .noStrikesReported {
+        font-size: 24px;
+    }
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .leave span.percent,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave span.percent,
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .remain span.percent,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain span.percent {
+        font-size: 15px;
+    }
+    .hex-map-visualisation .visual-information .title-sections-mobile .target {
+        margin-left: 0;
+    }
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures {
+        display: flex
+    }
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain {
+        width: 50%
+    }
+
+    .hex-map-visualisation .visual-information .title-sections .target, .hex-map-visualisation .visual-information .title-sections-mobile .target {
+        width: 73%;
+    }
+
+}
+
+@media screen and (max-width: 600px) {
+    .hex-map-visualisation .visual-map .map-inner .hex-grid,
+    .hex-map-visualisation .visual-map .map-inner .keys {
+        transform: scale(0.7);
+        margin: 2% auto;
+        
+    }
+    .hex-map-visualisation .visual-information .title-sections .target, .hex-map-visualisation .visual-information .title-sections-mobile .target {
+        width: 90%;
+        margin-left: 5px;
+    }
+
+    .visual-component {
+        margin-top: -50px;
+    }
+}
+
+
+
+@media screen and (max-width: 400px) {
+
+    .hex-map-visualisation .visual-map .map-inner .hex-grid,
+    .hex-map-visualisation .visual-map .map-inner .keys {
+        margin-left: -75px;
+    }
+}
+
+@media screen and (max-width: 540px) {
+    .hex-map-visualisation .visual-map .map-inner .hex-grid,
+    .hex-map-visualisation .visual-map .map-inner .keys {
+        margin: 4% auto;
+        
+    }
+
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .remain,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain {
+        display: inline-block;
+        line-height: 30px;
+        font-size: 21px;
+        margin-left: 4px;
+
+    }
+
+    .provinceName {
+        font-size: 26px;
+        font-family: "acumin-pro-extra-condensed",sans-serif !important;
+    }
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .leave,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave {
+        width: 75%;
+        display: inline-block;
+        line-height: 30px;
+        font-size: 21px;
+    }
+    .noStrikesReported {
+        font-size: 21px;
+    }
+}
+
+
+  .range input {
+    width: 100%;
+    top: 2px;
+    height: 0;
+    -webkit-appearance: none;
+  }
+
+  .range input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    margin: -8px 0 0;
+    border-radius: 50%;
+    background: #37adbf;
+    cursor: pointer;
+    border: 0 !important;
+  }
+  .range input::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    margin: -8px 0 0;
+    border-radius: 50%;
+    background: #37adbf;
+    cursor: pointer;
+    border: 0 !important;
+  }
+  .range input::-ms-thumb {
+    width: 18px;
+    height: 18px;
+    margin: -8px 0 0;
+    border-radius: 50%;
+    background: #37adbf;
+    cursor: pointer;
+    border: 0 !important;
+  }
+  .range input::-webkit-slider-runnable-track {
+    width: 90%;
+    height: 2px;
+    cursor: pointer;
+    background: #b2b2b2;
+  }
+  .range input::-moz-range-track {
+    width: 90%;
+    height: 2px;
+    cursor: pointer;
+    background: #b2b2b2;
+  }
+  .range input::-ms-track {
+    width: 90%;
+    height: 2px;
+    cursor: pointer;
+    background: #b2b2b2;
+  }
+  .range input:focus {
+    background: none;
+    outline: none;
+  }
+  .range input::-ms-track {
+    width: 90%;
+    cursor: pointer;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+  }
+  .inner-panel .inner-controls .range-labels {
+    margin: 15px -3.1% 0;
+    padding: 0;
+    list-style: none;
+    width: 108.4%;
+  }
+  .range-labels li {
+    position: relative;
+    float: left;
+    width: 7%;
+    text-align: center;
+    color: #b2b2b2;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .range-labels .selected::before {
+    background: #37adbf;
+  }
+  .range-labels .active.selected::before {
+    display: none;
+  }
+
+  .buttonDiv {
+    text-align: center;
+  }
+  .headerWrap {
+    white-space: nowrap;
+
+  }
+  .incrementTime {
+    background: #282828;
+    border-color: transparent;
+    color: #fff;
+    font-size: 30px;
+    border-radius: 4px; 
+    font-family: "AcuminProCond-Bold";
+    display: inline-block;
+  }
+
+  .fa-play {
+      color: #39b609;
+  }
+
+  .fa-pause {
+      color: red;
+  }
+
+  .fa-play:hover {
+    cursor: pointer;
+    }
+
+    .fa-pause {
+        cursor: pointer;
+    }
+    
+  .fa-building {
+    text-align: center; 
+    font-size: 26px; 
+    padding: 11px 0px 0 3px;
+  }
+
+  .fa-times {
+      color: white;
+      margin: 3px 5px;
+      position: absolute;
+      float: left;
+      pointer-events: auto;
+
+    }
+    .exitViewable {
+        color: rgba(0, 0, 0, 0.67);
+
+    }
+
+  #afghanistanTitle {
+      position: absolute;
+      margin-left: 35%;
+      letter-spacing: 8px;
+      top: 39%;
+      font-size: 35px;
+      transform: rotate(-40deg);
+      pointer-events: none;
+
+  }
+
+  #pakistanTitle {
+    width: 1.5em;
+    text-align: center;
+    position: absolute;
+    margin-left: 53%;
+    letter-spacing: 8px;
+    top: 63%;
+    font-size: 35px;
+    transform: rotate(-40deg);
+    pointer-events: none;
+
+
+}
+@media only screen and (max-width: 1100px) {
+    #pakistanTitle {
+        top: 60%;
+        margin-left: 58%;
+    }
+    #afghanistanTitle {
+        margin-left: 30%;
+    }
+}
+
+.noStrikesReported {
+    text-align: center;
+    margin: 2%;
+}
+
+.rectWrapper {
+    width: 18%;
+    height: 17%;
+    background: gray;
+    opacity: .5;
+    position: absolute;
+    float: right;
+    font-size: 60px;
+    text-decoration: underline;
+    right: 0%;
+    z-index: 100;
+    border-radius: 25px 0px 0px 25px;
+    top: 13%;
+    pointer-events: none;
+  }
+
+.dateHeader {
+    position:absolute;
+    float: right;
+    font-size: 10rem;
+    text-decoration: underline;
+    right: 3%;
+    top: 11%;
+    z-index: 100;
+    color: white !important;
+    pointer-events: none;
+    font-family: "acumin-pro-extra-condensed",sans-serif !important;
+
+}
+@media only screen and (max-width: 1000px) {
+    .dateHeader {
+        font-size: 8rem;
+        top: 10.5%;
+    }
+}
+@media only screen and (max-width: 687px) {
+    #pakistanTitle {
+        top: 63%;
+        margin-left: 57%;
+    }
+
+    #afghanistanTitle {
+        margin-left: 26%;
+        top: 30%;
+    }
+    .dateHeader {
+        display: none;
+    }
+    .rectWrapper {
+        display: none;
+    }
+    
+}
+
+@media screen and (max-width: 500px) {
+    .hex-map-visualisation .visual-map .map-inner .hex-grid,
+    .hex-map-visualisation .visual-map .map-inner .keys {
+        transform: scale(0.7);
+    }
+    #pakistanTitle {
+        top: 62%;
+        margin-left: 68%;
+        font-size: 32px;
+
+    }
+    #afghanistanTitle {
+        margin-left: 22%;
+        top: 38%;
+        font-size: 32px;
+
+    }
+    .tableRows {
+        font-size: 18px !important;
+        text-align: left !important;
+    }
+}
+  
+@media only screen and (max-width: 500px) {
+    .range-labels li:nth-of-type(2n){
+        display: none;
+    }
+
+    .inner-controls .range-labels li {
+        position: relative;
+        float: left;
+        width: 14%;
+        text-align: center;
+        color: #b2b2b2;
+        font-size: 18px;
+        cursor: pointer;
+      }
+      .hex-map-visualisation .visual-information .title-sections .target, .hex-map-visualisation .visual-information .title-sections-mobile .target {
+        width: 80%;
+        margin-left: 5px;
+    }
+
+    .dateHeader {
+        display: none;
+    }
+    .rectWrapper {
+        display: none;
+    } 
+
+    .title-sections {
+        width: 100%; 
+    }
+
+
+  }
+  @media only screen and (max-width: 465px) {
+    .hex-map-visualisation .visual-map .map-inner .hex-grid,
+    .hex-map-visualisation .visual-map .map-inner .keys {
+      transform: scale(0.6);
+      margin: -20px -13%;
+    }
+  }
+
+  @media only screen and (max-width: 390px) {
+    .hex-map-visualisation .visual-map .map-inner .hex-grid,
+    .hex-map-visualisation .visual-map .map-inner .keys {
+      transform: scale(0.5);
+      margin: -20px -24%;
+    }
+    .target tr{
+        font-size: 18px;
+    }
+
+    #visual-title {
+        font-size: 35px;
+        margin-bottom: -10px;
+    }
+    .dateHeader {
+        font-size: 30px;
+        text-decoration: underline;
+        top: 19%;
+    }
+    .rectWrapper {
+        width: 110px;
+        height: 55px;
+    } 
+    #pakistanTitle {
+        top: 63%;
+        margin-left: 54%;
+        font-size: 23px;
+
+    }
+    #afghanistanTitle {
+        margin-left: 20%;
+        top: 42%;
+        font-size: 20px;
+
+    }
+    .hex-map-visualisation .visual-information .title-sections .target, .hex-map-visualisation .visual-information .title-sections-mobile .target {
+        width: 65%;
+        margin-left: 5px;
+    }
+
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .remain,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain {
+        width: 19%;
+        display: inline-block;
+        line-height: 30px;
+        font-size: 19px;
+
+    }
+ 
+    .noStrikesReported {
+        font-size: 18px;
+        font-family : "acumin-pro-extra-condensed",sans-serif !important;
+    }
+
+    .provinceName {
+        font-size: 26px;
+    }
+    .hex-map-visualisation .visual-information .title-sections .target .target-figures .leave,
+    .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .leave {
+        width: 57%;
+        display: inline-block;
+        line-height: 17px;
+        font-size: 19px;
+        margin-left: 34px;
+    }
+  }
+
+  
+  @media only screen and (max-width: 345px) {
+    .hex-map-visualisation .visual-map .map-inner .hex-grid,
+    .hex-map-visualisation .visual-map .map-inner .keys {
+      transform: scale(0.45);
+      margin: -20px -25%;
+    }
+  }
+
+  .legend {
+    background: rgb(128, 128, 128, 0.14);
+    width: 15%;
+    height: 37%;
+    position: absolute;
+    right: 0%;
+    bottom: 24%;
+    border-radius: 20px 0px 0px 20px;
+    text-align: right;
+    font-family: "acumin-pro-extra-condensed",sans-serif !important;
+
+  }
+
+  .inactiveTiles {
+    width: 24px;
+    height: 24px;
+    background: #1A5432;
+    border-radius: 7px;
+  }
+
+  .legend-label {
+      text-align: center;
+      margin-left: 3%;
+      line-height: 20px;
+  }
+
+  tbody {
+      text-align: center !important;
+  }
+
+  .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border: none;
+}
+
+table.table.table-dark.table-fit.legend td {
+    font-family: acumin-pro-extra-condensed,sans-serif!important;
+}
+
+  table.table.table-dark.table-fit.legend td {
+        border: none;
+    }
+
+  .bombed-label {
+    position: absolute;
+    font-size: 20px;
+    top: 16.5%;
+    margin-left: 34%;
+    line-height: 20px;
+
+  }
+  .afghanistan-label {
+    position: absolute;
+    font-size: 20px;
+    top: 37%;
+    margin-left: 34%;
+    line-height: 20px;
+
+}
+.notprovince-label {
+    position: absolute;
+    font-size: 20px;
+    top: 49%;
+    margin-left: 34%;
+    line-height: 20px;
+
+}
+.inactive-label {
+    position: absolute;
+    font-size: 20px;
+    top: 67%;
+    margin-left: 34%;
+    line-height: 20px;
+
+}
+
+@media screen and (max-width: 1200px) {
+    
+      .bombedTiles {
+          width: 20px;
+          height: 20px;
+          background: radial-gradient(circle, rgba(255,0,0,1) 0%, rgba(161,11,11,1) 49%);
+          border-radius: 7px;
+          margin-top: 10%;
+          margin-left: 7%;
+      }
+    
+      .afghanistanTiles {
+        width: 20px;
+        height: 20px;
+        background: #51BCD7;
+        border-radius: 7px;
+        margin-top: 11%;
+        margin-left: 7%;
+      }
+    
+      .provinceName {
+          text-align: center;
+      }
+    
+      .notProvinceTiles {
+        width: 20px;
+        height: 20px;
+      }
+    
+      .inactiveTiles {
+        width: 20px;
+        height: 20px;
+      }
+    
+      .legend-label {
+          text-align: center;
+          margin-left: 3%;
+      }
+    
+      .bombed-label {
+          position: absolute;
+          font-size: 13px;
+          top: 29.5%;
+          margin-left: 25%;
+      }
+      .afghanistan-label {
+        position: absolute;
+        font-size: 13px;
+        top: 45%;
+        margin-left: 25%;
+    }
+    .notprovince-label {
+        position: absolute;
+        font-size: 13px;
+        top: 58.5%;
+        margin-left: 25%;
+    }
+    .inactive-label {
+        position: absolute;
+        font-size: 13px;
+        top: 74%;
+        margin-left: 25%;
+    }
+
+}
+@media screen and (max-width: 1100px) {
+    .legend {
+        display: none;
+    }
+}
+
+
+.playPauseImages {
+    width: 20px;
+}
+
+.playimage {
+    width: 25px;
+}
+
+.incrementTime:focus {
+    outline:none;
+}
+
+
+.visual-component {
+    background: #464646;
+    margin-bottom: 20px;
+    margin-top: 3%;
+}
+.visual-component .inner-panel {
+    width: 55%; padding: 30px 3px;  color: #fff; font-family: 'AcuminProCond-Regular';
+    margin: auto;
+}
+
+.visual-component .inner-viewable .swipeable .swipeable-item {
+    text-align: left; 
+}
+
+.visual-component .inner-viewable .swipeable .swipeable-item .item-frame {
+    height: 400px; width: auto;  text-align: left;
+    max-width: 70%;
+}
+
+.visual-component .inner-viewable .swipeable .swipeable-item .item-frame .item-frame-img {
+    background-color: #5f259f;
+    background-position: center;
+    background-origin: inherit;
+    background-size: cover;
+    height: 100%;
+    -moz-box-shadow: inset 0 0 10px #000000;
+    -webkit-box-shadow: inset 0 0 10px #000000;
+    box-shadow: inset 0 0 10px #000000;
+
+}
+
+.visual-component .inner-viewable .swipeable .swipeable-item .item-title {
+    margin-top: 15px; line-height: 1; font-family:"AcuminProCond-Regular"; display: none;
+}
+
+.visual-component .inner-viewable .swipeable .swipeable-item .item-title  span.bold{
+    font-weight: 600; font-family: "AcuminProCond-Bold";
+}
+
+.visual-component .inner-viewable .swipeable .swipeable-item .item-desc {
+    max-width: 100%; font-family: "AcuminPro-Semibold"; font-size: 14px; line-height: 1.5;
+    margin: auto; padding: 5px 0px 10px 0; text-align: left; min-height: 100px; display: none;
+}
+
+.visual-component .inner-controls {
+    display: none; cursor: default;
+    -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.visual-component .inner-controls .year-labels {
+    margin-top: 15px; width: 100%; text-align: right; height: 40px;
+}
+
+.visual-component .inner-controls .year-labels  span{
+    font-weight: 400; font-size: 12px; float: left; text-align: left; font-family:"AcuminPro-Regular";
+}
+
+.visual-component .inner-controls .rangeslider__fill{
+    background: #5f259f;
+}
+.visual-component .inner-controls .rangeslider {
+    cursor: pointer;
+}
+
+.slidecontainer {
+    width: 100%;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: calc(100% + 4px);
+    height: 15px;
+    border-radius: 5px;
+    background: #fff;
+    outline: none;
+    opacity: 1;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #5f259f;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #5f259f;
+    cursor: pointer;
+}
+.slider-prog{
+    position: relative; width: 0; background: #5f259f; opacity: 0.75; z-index: 1; pointer-events: none; margin-bottom: -15px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+@media screen and (max-width: 1350px) {
+
+    .visual-component .inner-panel {
+        width: 90%; margin: auto;
+    }
+}
+
+@media screen and (max-width: 940px) {
+    .rectWrapper {
+    width: 19%;
+    height: 15%;
+
+  }
+    
+}
+
+@media screen and (max-width: 600px) {
+    .map-inner {
+        margin-top: -80px; 
+     } 
+    .visual-component .inner-panel {
+        margin-top: -50px;
+         width: 95%; 
+    } 
+    .visual-component .inner-viewable .swipeable .swipeable-item .item-title {
+        font-size: 22px; min-height: 45px;
+    }
+
+    .visual-component .inner-viewable .swipeable .swipeable-item .item-desc {
+        min-height: 120px;
+    }
+
+    .visual-component .inner-viewable .swipeable .swipeable-item .item-frame {
+        height: 250px; 
+    }
+
+} 
+
+ @media screen and (max-width: 370px) {
+    .map-inner {
+        margin-top: -110px;
+    }
+    .visual-component .inner-panel {
+        margin-top: -80px;
+}
+}     
+
+.legend {
+    background: rgb(128, 128, 128, 0.14);
+    width: 15%;
+    height: 37%;
+    position: absolute;
+    right: 0%;
+    bottom: 24%;
+    border-radius: 20px 0px 0px 20px;
+    text-align: right;
+  }
+  
+ 
+  .visual-component {
+        background: #464646;
+        margin-bottom: 20px;
+        margin-top: 3%;
+    }
+    .visual-component .inner-panel {
+        width: 70%; padding: 30px 3px;  color: #fff; font-family: 'AcuminProCond-Regular';
+        margin: auto;
+    }
+
+    .visual-component .inner-viewable .swipeable .swipeable-item {
+        text-align: left; 
+    }
+
+    .visual-component .inner-viewable .swipeable .swipeable-item .item-frame {
+        height: 400px; width: auto;  text-align: left;
+        max-width: 70%;
+    }
+
+    .visual-component .inner-viewable .swipeable .swipeable-item .item-frame .item-frame-img {
+        background-color: #5f259f;
+        background-position: center;
+        background-origin: inherit;
+        background-size: cover;
+        height: 100%;
+        -moz-box-shadow: inset 0 0 10px #000000;
+        -webkit-box-shadow: inset 0 0 10px #000000;
+        box-shadow: inset 0 0 10px #000000;
+
+    }
+
+    .visual-component .inner-viewable .swipeable .swipeable-item .item-title {
+        margin-top: 15px; line-height: 1; font-family:"AcuminProCond-Regular"; display: none;
+    }
+
+    .visual-component .inner-viewable .swipeable .swipeable-item .item-title  span.bold{
+        font-weight: 600; font-family: "AcuminProCond-Bold";
+    }
+
+    .visual-component .inner-viewable .swipeable .swipeable-item .item-desc {
+        max-width: 100%; font-family: "AcuminPro-Semibold"; font-size: 14px; line-height: 1.5;
+        margin: auto; padding: 5px 0px 10px 0; text-align: left; min-height: 100px; display: none;
+    }
+
+    .visual-component .inner-controls {
+        display: none; cursor: default;
+        -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    .visual-component .inner-controls .year-labels {
+        margin-top: 15px; width: 100%; text-align: right; height: 40px;
+    }
+
+    .visual-component .inner-controls .year-labels  span{
+        font-weight: 400; font-size: 12px; float: left; text-align: left; font-family:"AcuminPro-Regular";
+    }
+
+    .visual-component .inner-controls .rangeslider__fill{
+        background: #5f259f;
+    }
+    .visual-component .inner-controls .rangeslider {
+        cursor: pointer;
+    }
+
+    .slidecontainer {
+        width: 100%;
+    }
+
+    .slider {
+        -webkit-appearance: none;
+        width: calc(100% + 4px);
+        height: 15px;
+        border-radius: 5px;
+        background: #fff;
+        outline: none;
+        opacity: 1;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+    }
+
+    .slider:hover {
+        opacity: 1;
+    }
+
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #5f259f;
+        cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #5f259f;
+        cursor: pointer;
+    }
+    .slider-prog{
+        position: relative; width: 0; background: #5f259f; opacity: 0.75; z-index: 1; pointer-events: none; margin-bottom: -15px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    @media screen and (max-width: 600px) {
+        .map-inner {
+            margin-top: -80px;
+        }
+        .visual-component {
+            margin-top: -70px;
+        }
+        .visual-component .inner-panel {
+            width: 95%;
+        }
+        .visual-component .inner-viewable .swipeable .swipeable-item .item-title {
+            font-size: 22px; min-height: 45px;
+        }
+
+        .visual-component .inner-viewable .swipeable .swipeable-item .item-desc {
+            min-height: 120px;
+        }
+
+        .visual-component .inner-viewable .swipeable .swipeable-item .item-frame {
+            height: 250px; 
+        }
+
+    }
+
+    @media screen and (max-width: 370px) {
+        .map-inner {
+            margin-top: -110px;
+        }
+    }
+    #provincebuttonwrap {
+        display: flex;
+        width: 100%;
+    }
+
+    .redbutton {
+        background: #d23333;
+        border-radius: 20px;
+        width: 25px;
+        height: 25px;
+        margin: 5px 5px; 
+    }
+</style>
+ <div class="hex-map-visualisation">
+        <div class="page visual-map" ng-app="myApp" ng-controller="myController" id="myController">
+            <div class="headerWrap"><div class="" id="visual-title">Dronestrikes in Northwestern Pakistan <div class="unboldDate">(2004 - 2017)<button class="incrementTime"><i class="fa fa-play"></i></button></div> 
+            </div></div>
+            <div class="rectWrapper"></div>
+            <h1 class="dateHeader"></h1>
+
+            <div class="visual-information">
+                <div class="title-sections">
+                    <div class="target topLeft">
+                        <div id="provincebuttonwrap">
+                            <div class="redbutton">
+                                <i class="fa fa-times"></i>
                             </div>
+                                <h1 class="provinceName">{{viewable.area}}&nbsp;&nbsp;<i class="fa fa-building buildingHead"></i></h1>
                         </div>
-                    </div>
-                </div>
-                <div class="map-inner">
-                    <ul id="" class="hex-grid clear">
-                        <li class="" ng-repeat="x in points" ng-style="{{x.style}}">
-                            <div class="hexagon style-{{x.status}}" data-id="{{x.id}}"><span></span></div>
-                        </li>
-                    </ul>
-                    <h1 id="pakistanTitle">PAKISTAN</h1>
-                    <h1 id="afghanistanTitle">AFGHANISTAN</h1>
-                    <div class = "legend">
-                        <h1 class="legend-label">LEGEND:</h1>
-                        <div class="bombedTiles"></div><h1 class="bombed-label">AREA STRUCK DURING YEAR</h1>
-                        <div class="afghanistanTiles"></div><h1 class="afghanistan-label">AFGHANISTAN</h1>
-                        <div class="notProvinceTiles"></div><h1 class="notprovince-label">AREAS NEVER STRUCK</h1>
-                        <div class="inactiveTiles"></div><h1 class="inactive-label">AREAS NOT STRUCK DURING YEAR</h1>
-                    </div>
-                </div>
-                <div class="visual-component">
-                    <div class="inner-panel">
-                        <div class="inner-controls">
-                            <div class="range">
-                                <input type="range" min="1" max="14" steps="1" value="1" id="newLine">
-                            </div>
-                            <ul class="range-labels">
-                                <li>2004</li>
-                                <li>2005</li>
-                                <li>2006</li>
-                                <li>2007</li>
-                                <li>2008</li>
-                                <li>2009</li>
-                                <li>2010</li>
-                                <li>2011</li>
-                                <li>2012</li>
-                                <li>2013</li>
-                                <li>2014</li>
-                                <li>2015</li>
-                                <li>2016</li>
-                                <li>2017</li>
-                            </ul>
+                        <h2 class="noStrikesReported">No strikes reported</h2>
+                        <div class="target-figures">
+                            <table class='table table-dark' style='color: #fff;'>
+                                <thead>
+
+                                </thead>
+                                <tbody>
+                                    <tr class='tableRows'></tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
-    
+            <div class="map-inner">
+                <ul id="" class="hex-grid clear">
+                    <li class="" ng-repeat="x in points" ng-style="{{x.style}}">
+                        <div class="hexagon style-{{x.status}}" data-id="{{x.id}}"><span></span></div>
+                    </li>
+                </ul>
+                <h1 id="pakistanTitle">PAKISTAN</h1>
+                <h1 id="afghanistanTitle">AFGHANISTAN</h1>
+                <table class="table table-dark table-fit legend" style="color: #fff;">
+                        <thead>
+                        </thead>
+        
+                        <tbody>
+                            <tr>
+                                <td colspan="2"><h1 class="legend-label">LEGEND:</h1></td>
+                                
+                            </tr>
+                            <tr>
+                                <th scope="row" class="wd-10"><div class="bombedTiles"></div></th>
+                                <td style="margin-left: -10%;" class="wd-30"><div class="tile-labels">AREA STRUCK DURING YEAR</div></td>
+                            </tr>
+
+                            <tr>
+                                    <th scope="row" class="wd-10"><div class="afghanistanTiles"></div></th>
+                                    <td style="margin-left: -10%;" class="wd-30"><div class="tile-labels">AFGHANISTAN</div></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="wd-10"><div class="notProvinceTiles"></div></th>
+                                <td style="margin-left: -10%;" class="wd-30"><div class="tile-labels">AREAS NEVER STRUCK</div></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="wd-10"><div class="inactiveTiles"></div></th>
+                                <td style="margin-left: -10%;" class="wd-30"><div class="tile-labels">AREAS NOT STRUCK DURING YEAR</div></td>
+                            </tr>
+        
+                        </tbody>
+        
+                    </table>
+            <div class="visual-component">
+                <div class="inner-panel">
+                    <div class="inner-controls">
+                        <div class="range">
+                            <input type="range" min="1" max="14" steps="1" value="1" id="newLine">
+                        </div>
+                        <ul class="range-labels">
+                            <li>2004</li>
+                            <li>2005</li>
+                            <li>2006</li>
+                            <li>2007</li>
+                            <li>2008</li>
+                            <li>2009</li>
+                            <li>2010</li>
+                            <li>2011</li>
+                            <li>2012</li>
+                            <li>2013</li>
+                            <li>2014</li>
+                            <li>2015</li>
+                            <li>2016</li>
+                            <li>2017</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-<script>
 
-var app=angular.module("myApp",[]);function sortStrikeCountByLocation(e){var t=strikes[e];return stringSummary="",stringSummary=t.exactdate,console.log(stringSummary),stringSummary}function getStrikeSummary(e){var t=strikes[e];return intMinDeaths=parseInt(t.minDeaths),intMaxDeaths=parseInt(t.maxDeaths),intMaxCivDeaths=parseInt(t.minCivilianDeaths),intMaxChildDeaths=parseInt(t.maxChildDeaths),stringSummary="",intMaxDeaths<1?stringSummary="No casualties reported":intMaxDeaths>0&&(intMaxCivDeaths>0?intMaxChildDeaths>0?stringSummary="Maximum number of "+intMaxChildDeaths+" children dead, maximum of "+intMaxCivDeaths+" civilians killed, "+intMaxDeaths+" total killed":intMaxChildDeaths<1&&(stringSummary="Maximum of "+intMaxCivDeaths+" civilians killed, "+intMaxDeaths+" total killed"):intMaxCivDeaths<1&&(stringSummary="No civilian casualties, "+intMaxDeaths+" total killed")),stringSummary}app.controller("myController",["$scope","$window","$http",function(e,t,a){a.get("https://multimedia.thenational.ae/assets/visual_assets/pakistan_drone_visual/locations.txt").then(function(a){e.src=processData(a.data),t.src=e.src,t.currentYear=2004,$(".dateHeader").html(currentYear)}).then(function(){a.get("https://multimedia.thenational.ae/assets/visual_assets/pakistan_drone_visual/map.csv").then(function(a){e.points=fixedPositions(a.data);let i=Math.max(20),r=Math.max(1.13333*i);e.points.forEach(function(e){e.style={padding:r+"px "+i+"px "},e.row>1&&(e.style["margin-top"]="-"+(r/2-1)+"px"),e.row%2==0&&(e.style.transform="translateX(50%) rotate(-60deg) skewY(30deg)")}),$(".hex-grid").css("width","500px"),t.points=e.points})}).then(function(){a.get("https://multimedia.thenational.ae/assets/visual_assets/pakistan_drone_visual/strikedata2.csv").then(function(a){e.strikes=processStrikeData(a.data),t.strikes=e.strikes,e.timelineLabelStyle={width:"6.25%"},$(".item-frame .item-frame-img").css("background-color","unset"),$(".inner-controls").show(),$(".inner-viewable .swipeable .swipeable-item .item-title").show(),$(".inner-viewable .swipeable .swipeable-item .item-desc").show(),e.currentDate=getAllDatePoints(),t.currentDate=e.currentDate[e.currentDate.length],t.getAllDatePoints=getAllDatePoints(currentDate),animateStrikesByYear(getAllDatePoints[0])})}),e.updateViewable=function(a,i,r){if(e.viewable=e.points[a],t.currentYear=currentYear,e.viewbox=e.strikes[a],t.relevantStrikes=getStrikesByYearAndLocation(t.currentYear,e.viewable.id),r="."+r,t.globalStrikeData=getStrikesByYear(currentYear),$(r).css("visibility","hidden"),2!=e.viewable.status&&3!=e.viewable.status){$(r).css("visibility","visible");let e=$(r+" h1");e.show(),e.css("color","#FF0000");let a=$(r+" .target-figures");a.empty();let i=t.relevantStrikes.length;if(strikeCounter=0,$(".provinceName").css("color","#668D76"),$(".noStrikesReported").css("display","block"),i)if(i>8){$(".noStrikesReported").css("display","none"),$(".provinceName").css("color","rgb(253, 0, 0)"),count=0;let e=0,i=0,r=0;t.relevantStrikes.forEach(t=>{e+=parseInt(t.maxDeaths),i+=parseInt(t.maxCivilianDeaths),r+=parseInt(t.maxChildDeaths),count+=1}),a.append("<h2 class='leave' style='margin-left: 20px'> Total Number of Strikes:  "+count+"<br><br><br>Total Number of Deaths:  "+e+"<br><br><br>Total Number of Civilian Casualties:  "+i+"<br><br><br> Total Number of Child Deaths:  "+r+"</h2>")}else i<=8&&($(".noStrikesReported").css("display","none"),$(".provinceName").css("color","rgb(253, 0, 0)"),t.relevantStrikes.forEach(e=>{a.append("<h2 class='remain'>"+sortStrikeCountByLocation(e.id)+"</h2>"),a.append("<h2 class='leave'><div class='unbold'>"+getStrikeSummary(e.id)+"</div></h2><br>"),strikeCounter+=1}))}}}]),$(function(){$("#newLine").on("input",function(e){window.currentYear=parseInt(this.value)+2003,mappedCurrentDate=currentYear-2003;let t=mappedCurrentDate/14*100;animateStrikesByYear(currentYear),$(".dateHeader").html(currentYear),$("#rangeProg").css("width",t+"%"),$("#rangeProg").css("width","calc("+t+"% + 2px)"),angular.element("#myController").scope().$apply()}),$(".visual-map").on("mouseover",".hexagon",function(e){let t=$(this).data("id");angular.element("#myController").scope().updateViewable(t,e.target,"topLeft"),angular.element("#myController").scope().$apply()})});var intervalID=window.setInterval(playButton,700);function playButton(){if($(".actv").length){$(".incrementTime").html('<i class="fa fa-pause"></i>'),2017==currentYear&&(currentYear=2004,$(".dateHeader").html(currentYear),$(document).find(".incrementTime").removeClass("actv"),$("#newLine").val(1),$("#newLine").slider("refresh")),currentYear=parseInt(currentYear),currentYear+=1,animateStrikesByYear(currentYear),window.currentYear=currentYear,$(".dateHeader").html(currentYear),mappedCurrentDate=currentYear-2003,document.getElementById("newLine").stepUp(1),progWidthLocal=mappedCurrentDate/14*100,$("#rangeProg").css("width",progWidthLocal+"%"),$("#rangeProg").css("width","calc("+progWidthLocal+"% + 2px)"),angular.element("#myController").scope().$apply();mappedCurrentDate}2004==currentYear&&(animateStrikesByYear(2004),$(".dateHeader").html(2004),$(".incrementTime").html('<i class="fa fa-play"></i>'))}function animateStrike(e){let t=strikes[e],a=points[t.tileIndex].id;$('*[data-id="'+a+'"]').addClass("explodes")}function shrinkTile(e){let t=strikes[e],a=points[t.tileIndex].id;$('*[data-id="'+a+'"]').removeClass("explodes")}function getStrikesByYear(e){let t=[];return strikes.forEach(a=>{a.date==e&&t.push(a)}),t}function getStrikesByYearAndLocation(e,t){let a=[];return strikes.forEach(i=>{i.date==e&&i.tileIndex==t&&a.push(i)}),a}function noStrikes(e){let t=[];return strikes.forEach(a=>{a.date!=e&&t.push(a)}),t}function getAllDatePoints(){let e=[];return strikes.forEach(t=>{!1===e.includes(t.date)&&e.push(t.date)}),e.sort(sortNumber),e}function sortNumber(e,t){return e-t}function animateStrikesByYear(e){window.redValue=0,strikeArray=getStrikesByYear(e),noStrikesArray=noStrikes(e),noStrikesArray.forEach(e=>{shrinkTile(e.id)}),strikeArray.forEach(e=>{animateStrike(e.id)})}function numberWithCommas(e){return e.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",")}function DataPoint(e,t){this.id=e,this.area=t}function processData(e){let t=e.split(/\r\n|\n/),a=t[0].split(","),i=[];for(let e=0;e<t.length;e++){let r=t[e].split(",");if(r.length==a.length){let e=new DataPoint(void 0,void 0);for(let t=0;t<a.length;t++)e[a[t]]=r[t];i.push(e),0}}return i}function StrikePoint(e,t,a,i,r,n,s,l,o,c,d,u,m,h){this.id=e,this.date=t,this.mapRow=a,this.mapColumn=i,this.minDeaths=r,this.maxDeaths=n,this.minCivilianDeaths=s,this.maxCivilianDeaths=l,this.minChildDeaths=o,this.maxChildDeaths=c,this.mapIndex=d,this.tileIndex=u,this.summary=m,this.counter=h}function processStrikeData(e){let t=e.split(/\r\n|\n/),a=t[0].split(","),i=0,r=[];for(let e=1;e<t.length;e++){let s=t[e].split(","),l=new StrikePoint(i,void 0,void 0,void 0,void 0,void 0,void 0,void 0,void 0,void 0,void 0,void 0,void 0);for(let e=0;e<a.length;e++){l[a[e]]=s[e];var n=getMapPoint(l.mapIndex);if(void 0!==n)l.mapColumn=n.column,l.mapRow=n.row,l.tileIndex=n.id;else if(void 0===n)continue}i++,r.push(l)}return r}function getMapPoint(e){for(let a=0;a<points.length;a++){var t=points[a];if(t.mapID==e)return t}}function MappedPosition(e,t,a,i,r,n,s){this.id=e,this.mapID=t,this.row=a,this.column=i,this.area=r,this.style=n,this.status=s}function fixedPositions(e){let t=e.split(/\r\n|\n/),a=[],i=0;for(let e=0;e<t.length;e++){let r=t[e].split(",");for(let t=0;t<r.length;t++){let n,s=i,l=e+1,o=t+1,c=new MappedPosition(s,void 0,l,o,void 0,2,2),d=2;if("P"==r[t]&&(d=3,n=3),"X"!=r[t]){let e=r[t];src[e]&&(area=src[e].area,d=1,n=1),c=new MappedPosition(s,e,l,o,area,n,d)}i++,a.push(c)}}return a}$(".incrementTime").click(function(){$(".actv").length?($(document).find(".incrementTime").removeClass("actv"),$(".incrementTime").html('<i class="fa fa-play"></i>')):$(document).find(".incrementTime").addClass("actv")});var sheet=document.createElement("style"),$rangeInput=$(".range input"),prefs=["webkit-slider-runnable-track","moz-range-track","ms-track"];document.body.appendChild(sheet);var getTrackStyle=function(e){var t=e.value;$(".range-labels li").removeClass("active selected");var a=$(".range-labels").find("li:nth-child("+t+")");a.addClass("active selected"),a.prevAll().addClass("selected")};$rangeInput.on("input",function(){sheet.textContent=getTrackStyle(this)}),$(".range-labels li").on("click",function(){var e=$(this).index();$rangeInput.val(e+1).trigger("input")});
+    </div>
+    <script>
+            var app = angular.module('myApp', []);
+            app.controller('myController', ['$scope', '$window', '$http', function ($scope, $window, $http) {
+                $http.get("https://multimedia.thenational.ae/assets/visual_assets/pakistan_drone_visual/locations.txt")
+                    .then(function (response) {
+                        $scope.src = processData(response.data);
+                        $window.src = $scope.src;
+                        $window.currentYear = 2004;
+                        $(".dateHeader").html(currentYear);
+                    })
+                    .then(function () {
+                        $http.get("https://multimedia.thenational.ae/assets/visual_assets/pakistan_drone_visual/map.csv")
+                            .then(function (response) {
+                                $scope.points = fixedPositions(response.data);
+                                let gridWidth = 530;
+                                let gridRowLength = 12;
+                                let pointWidth = Math.max((gridWidth / gridRowLength) / 2);
+                                let pointHeight = Math.max(pointWidth * 1.13333);
+        
+                                $scope.points.forEach(function (point) {
+                                    point['style'] = { 'padding': pointHeight + 'px ' + pointWidth + 'px ' };
+                                    if (point['row'] > 1) {
+                                        point['style']['margin-top'] = '-' + ((pointHeight / 2) - 1) + 'px';
+                                    }
+                                    if ((point['row'] % 2) == 0) {
+                                        point['style']['transform'] = 'translateX(50%) rotate(-60deg) skewY(30deg)';
+                                    }            
+                                });
+        
+                                $('.hex-grid').css('width', gridWidth + 'px');
+                                $window.points = $scope.points;
+        
+                            });
+                    })
+                    .then(function () {
+                        $http.get("https://multimedia.thenational.ae/assets/visual_assets/pakistan_drone_visual/strikedata2.csv")
+                            .then(function (response) {
+                                $scope.strikes = processStrikeData(response.data);
+                                $window.strikes = $scope.strikes;
+        
+                                $scope.timelineLabelStyle = { 'width': "" + (100 / 16) + "%" };
+        
+                                $('.item-frame .item-frame-img').css('background-color', 'unset');
+                                $('.inner-controls').show();
+                                $('.inner-viewable .swipeable .swipeable-item .item-title').show();
+                                $('.inner-viewable .swipeable .swipeable-item .item-desc').show();
+        
+                                $scope.currentDate = getAllDatePoints();
+                                $window.currentDate = $scope.currentDate[$scope.currentDate.length];
+        
+                                $window.getAllDatePoints = getAllDatePoints(currentDate);
+                                animateStrikesByYear(getAllDatePoints[0]);
+                                addKabul();
+                            });
+                    });
+        
+                $scope.updateViewable = function (id, origin, target) {
+                    $scope.viewable = $scope.points[id];
+                    $window.currentYear = currentYear;
+                    $scope.viewbox = $scope.strikes[id];
+                    $window.relevantStrikes = getStrikesByYearAndLocation($window.currentYear, $scope.viewable.id);
+                    target = '.' + target;
+                    $window.globalStrikeData = getStrikesByYear(currentYear);
+                    $(target).css('visibility', 'hidden');    
+                    $(".fa-times").click(function() {
+                        $(target).css('visibility', 'hidden');    
+                    }); 
+        
+                    if ($scope.viewable.status == '1' || $scope.viewable.status == '4' || $scope.viewable.status == '5') {
+                        $(target).css('visibility', 'visible');
+                        let targetInfoBox = $(target + ' h1');
+                        targetInfoBox.show();
+                        targetInfoBox.css('color', '#FF0000');
+                        let targetFigures = $(target + ' .target-figures');
+        
+                        targetFigures.empty();
+                        let numStrikes = $window.relevantStrikes.length;
+                        strikeCounter = 0;
+                        $(".provinceName").css('color', '#668D76');
+                        $(".provinceName"). css("font-size", "30px");
+                        $(".provinceName"). css("margin", "0 auto");
 
-</script>
+                        $(".noStrikesReported").css("display", "block");
+                        $(".buildingHead").css('display', 'none');
+                        targetFigures.append("<table class='table table-dark' style='color: #fff;'><thead></thead><tbody class='tableRows'></tbody></table>");
+                        if (numStrikes) {
+                            if (numStrikes > 8) {
+                                $(".noStrikesReported").css("display", "none");
+                                $(".provinceName").css('color', 'rgb(253, 0, 0)');
+                                count = 0;
+                                let totalDeaths = 0;
+                                let civDeaths = 0;
+                                let childDeaths = 0; 
+                                $window.relevantStrikes.forEach(strike => {
+        
+                                    totalDeaths += parseInt(strike.maxDeaths);
+                                    civDeaths += parseInt(strike.maxCivilianDeaths);
+                                    childDeaths += parseInt(strike.maxChildDeaths);
+                                    count += 1;
+                                });
+                                $(".tableRows").append("<tr><th scope='row' style='border-top: 0;' id='date'>Total Number of Strikes: </th> <td id ='stats'>" + count + "</td></tr>");
+                                $(".tableRows").append("<tr><th scope='row' style='border-top: 0;' id='date'>Total Number of Deaths: </th> <td id ='stats'>" + totalDeaths + "</td></tr>");
+                                $(".tableRows").append("<tr><th scope='row' style='border-top: 0;' id='date'>Total Number of Civilian Deaths: </th> <td id ='stats'>" + civDeaths + "</td></tr>");
+                                $(".tableRows").append("<tr><th scope='row' style='border-top: 0;' id='date'>Total Number of Child Deaths: </th> <td id ='stats'>" + childDeaths + "</td></tr>");
+        
+                            } else if (numStrikes <= 8) {
+                                $(".noStrikesReported").css("display", "none");
+                                $(".provinceName").css('color', 'rgb(253, 0, 0)');
+                                $window.relevantStrikes.forEach(strike => {
+                                    $(".tableRows").append("<tr><th scope='row' style='border-top: 0;' id='date'>" + sortStrikeCountByLocation(strike.id) + "</th> <td id ='stats'>" + getStrikeSummary(strike.id) +"</td></tr>");
+                                    strikeCounter += 1;
+        
+                                });
+                            }
+                        }
+                        if ($scope.viewable.status == '4' || $scope.viewable.status == '5') {
+                            $(".noStrikesReported").css("display", "none");
+                            $(".provinceName").css("font-size", "30px");
+                            $(".buildingHead").css('display', 'inline');
+                            $(".provinceName").css('color', 'white');
+        
+        
+                        }
+        
+                    }
+        
+                }
+            }]);
+    
+            function addKabul() {
+                $(".style-4").append("<span><i class='fa fa-building'></i></span>");
+                $(".style-5").append("<span><i class='fa fa-building'></i></span>");
+        
+            }
+        
+            function sortStrikeCountByLocation(strikeID) {
+                var element = strikes[strikeID];
+                stringSummary = '';
+                stringSummary = element.exactdate;
+                return stringSummary;
+            }
+        
+            function getStrikeSummary(strikeID) {
+                var element = strikes[strikeID];
+                intMinDeaths = parseInt(element.minDeaths);
+                intMaxDeaths = parseInt(element.maxDeaths);
+                intMaxCivDeaths = parseInt(element.minCivilianDeaths);
+                intMaxChildDeaths = parseInt(element.maxChildDeaths);
+                stringSummary = '';
+                if (intMaxDeaths < 1) {
+                    stringSummary = "No casualties reported";
+                }
+                else if (intMaxDeaths > 0) {
+                    if (intMaxCivDeaths > 0) {
+                        if (intMaxChildDeaths > 0) {
+                            stringSummary = "Maximum number of " + intMaxChildDeaths + " children dead, maximum of " + intMaxCivDeaths + " civilians killed, " + intMaxDeaths + " total killed";
+                        }
+                        else if (intMaxChildDeaths < 1) {
+                            stringSummary =  "Maximum of " + intMaxCivDeaths + " civilians killed, " + intMaxDeaths + " total killed";
+                        }
+                    }
+                    else if (intMaxCivDeaths < 1) {
+                        stringSummary = "No civilian casualties, " + intMaxDeaths + " total killed";
+                    }
+                }
+                return stringSummary;
+            }
+        
+            $(function () {
+                $('#newLine').on('input', function (ev) {
+                    window.currentYear = parseInt(this.value) + 2003;
+                    mappedCurrentDate = currentYear - 2003;
+                    let progWidth = (mappedCurrentDate / 14 * 100);
+                    animateStrikesByYear(currentYear);
+                    $(".dateHeader").html(currentYear);
+                    $('#rangeProg').css('width', progWidth + '%');
+                    $('#rangeProg').css('width', 'calc(' + progWidth + '% + 2px)');
+                    angular.element('#myController').scope().$apply();
+                });
+        
+                $(".visual-map").on("mouseover", ".hexagon", function (event) {
+                    let gridItemStatus = $(this).data('id');
+                    angular.element('#myController').scope().updateViewable(gridItemStatus, event.target, "topLeft");
+                    angular.element('#myController').scope().$apply();
+                });
+        
+            });
+        
+            //checks every 500ms if button is clicked/playButton() function is activated. 
+            var intervalID = window.setInterval(playButton, 700);
+        
+            $(".incrementTime").click(function () {
+                if ($('.actv').length) {
+                    $(document).find(".incrementTime").removeClass("actv");
+                    $(".incrementTime").html('<i class="fa fa-play"></i>');
+                } else {
+                    $(document).find(".incrementTime").addClass("actv");
+                }
+            });
+        
+            function playButton() {
+                if ($('.actv').length) {
+                    $(".incrementTime").html('<i class="fa fa-pause"></i>');
+                    if (currentYear == 2017) {
+                        currentYear = 2004;
+                        $(".dateHeader").html(currentYear);
+                        $(document).find(".incrementTime").removeClass("actv");
+                        $("#newLine").val(1);
+                        $('#newLine').slider('refresh');
+                    }
+        
+                    currentYear = parseInt(currentYear);
+                    currentYear += 1;
+                    animateStrikesByYear(currentYear);
+                    window.currentYear = currentYear;
+                    $(".dateHeader").html(currentYear);
+                    mappedCurrentDate = currentYear - 2003;
+                    document.getElementById("newLine").stepUp(1);
+                    progWidthLocal = (mappedCurrentDate / 14 * 100);
+                    $('#rangeProg').css('width', progWidthLocal + '%');
+                    $('#rangeProg').css('width', 'calc(' + progWidthLocal + '% + 2px)');
+                    angular.element('#myController').scope().$apply();
+                    let progWidth = (mappedCurrentDate / 14 * 100);
+                }
+                if (currentYear == 2004) {
+                    animateStrikesByYear(2004);
+                    $(".dateHeader").html(2004);
+                    $(".incrementTime").html('<i class="fa fa-play"></i>');
+        
+                }
+            }
+        
+            function animateStrike(strikeID) {
+                let strike = strikes[strikeID];
+                let strikeMapPoint = points[strike.tileIndex];
+                let elementID = strikeMapPoint.id;
+                $('*[data-id="' + elementID + '"]').addClass('explodes');
+            }
+        
+            function shrinkTile(strikeID) {
+                let strike = strikes[strikeID];
+                let strikeMapPoint = points[strike.tileIndex];
+                let elementID = strikeMapPoint.id;
+                $('*[data-id="' + elementID + '"]').removeClass('explodes');
+            }
+        
+            function getStrikesByYear(year) {
+                let returnArray = [];
+                strikes.forEach(element => {
+                    if (element.date == year) {
+                        returnArray.push(element);
+                    }
+                });
+                return returnArray;
+            }
+        
+            function getStrikesByYearAndLocation(year, tileIndex) {
+                let results = [];
+                strikes.forEach(strike => {
+                    if (strike.date == year && strike.tileIndex == tileIndex) {
+                        results.push(strike);
+                    }
+                })
+                return results;
+            }
+        
+            function noStrikes(year) {
+                let returnArray = [];
+                strikes.forEach(element => {
+                    if (element.date != year) {
+                        returnArray.push(element);
+                    }
+                });
+                return returnArray;
+            }
+        
+            function getAllDatePoints() {
+                let returnArray = []
+                strikes.forEach(element => {
+                    if (returnArray.includes(element.date) === false) {
+                        returnArray.push(element.date);
+                    }
+                });
+                returnArray.sort(sortNumber);
+                return returnArray;
+            }
+        
+            function sortNumber(a, b) {
+                return a - b;
+            }
+        
+            function animateStrikesByYear(year) {
+                window.redValue = 0;
+                strikeArray = getStrikesByYear(year);
+                noStrikesArray = noStrikes(year);
+                noStrikesArray.forEach(element => {
+                    shrinkTile(element.id);
+                });
+                strikeArray.forEach(element => {
+                    animateStrike(element.id);
+                });
+            }
+        
+            function numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            function DataPoint(id, area) {
+                this.id = id;
+                this.area = area;
+            }
+        
+            function processData(allText) {
+                let allTextLines = allText.split(/\r\n|\n/);
+                let headers = allTextLines[0].split(',');
+                let count = 0;
+                let dataPoints = [];
+                for (let i = 0; i < allTextLines.length; i++) {
+                    let data = allTextLines[i].split(',');
+                    if (data.length == headers.length) {
+                        let dataPoint = new DataPoint(undefined, undefined);
+                        for (let j = 0; j < headers.length; j++) {
+                            dataPoint[headers[j]] = data[j];
+                        }
+                        dataPoints.push(dataPoint);
+                        count++;
+                    }
+                }
+                return dataPoints;
+            }
+            function StrikePoint(id, date, mapRow, mapColumn, minDeaths, maxDeaths, minCivilianDeaths, maxCivilianDeaths, minChildDeaths, maxChildDeaths, mapIndex, tileIndex, summary, counter) {
+                this.id = id;
+                this.date = date;
+                this.mapRow = mapRow;
+                this.mapColumn = mapColumn;
+                this.minDeaths = minDeaths;
+                this.maxDeaths = maxDeaths;
+                this.minCivilianDeaths = minCivilianDeaths;
+                this.maxCivilianDeaths = maxCivilianDeaths;
+                this.minChildDeaths = minChildDeaths;
+                this.maxChildDeaths = maxChildDeaths;
+                this.mapIndex = mapIndex;
+                this.tileIndex = tileIndex;
+                this.summary = summary;
+                this.counter = counter;
+            }
+        
+            function processStrikeData(allStrikeData) {
+                let allTextLines = allStrikeData.split(/\r\n|\n/);
+                let headers = allTextLines[0].split(',');
+                let count = 0;
+                let strikePoints = [];
+                for (let i = 1; i < allTextLines.length; i++) {
+                    let data = allTextLines[i].split(',');
+                    let strikePoint = new StrikePoint(count, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+                    for (let j = 0; j < headers.length; j++) {
+                        strikePoint[headers[j]] = data[j];
+                        var mapPoint = getMapPoint(strikePoint.mapIndex);
+                        if (typeof mapPoint != 'undefined') {
+                            strikePoint.mapColumn = mapPoint.column;
+                            strikePoint.mapRow = mapPoint.row;
+                            strikePoint.tileIndex = mapPoint.id;
+                        }
+                        else if (typeof mapPoint === 'undefined') {
+                            continue;
+                        }
+        
+                    }
+                    count++;
+                    strikePoints.push(strikePoint);
+                }
+                return strikePoints;
+            }
+            function getMapPoint(mapID) {
+                for (let i = 0; i < points.length; i++) {
+                    var point = points[i];
+                    if (point.mapID == mapID) {
+                        return point;
+                    }
+                }
+            }
+        
+            function MappedPosition(id, mapID, row, column, area, style, status) {
+                this.id = id;
+                this.mapID = mapID;
+                this.row = row;
+                this.column = column;
+                this.area = area;
+                this.style = style;
+                this.status = status;
+            }
+        
+            function fixedPositions(position) {
+                let lines = position.split(/\r\n|\n/);
+                let points = [];
+                let count = 0;
+                for (let i = 0; i < lines.length; i++) {
+                    let line = lines[i];
+                    let cols = line.split(',');
+                    for (let j = 0; j < cols.length; j++) {
+                        let id = count;
+                        let row = i + 1;
+                        let column = j + 1;
+                        let mappedPosition = new MappedPosition(id, undefined, row, column, undefined, 2, 2);
+                        let style;
+                        let status = 2;
+                        if (cols[j] == 'P') {
+                            status = 3;
+                            style = 3;
+                        }
+        
+                        if (cols[j] != 'X') {
+                            let mapID = cols[j];
+                            let location = "somewhere";
+                            if (src[mapID]) {
+                                area = src[mapID]['area'];
+                                status = 1;
+                                style = 1;
+                            }
+                            if (cols[j] == '33') {
+                            status = 4;
+                            style = 4;
+                            }
+                            if (cols[j] == '32') {
+                                status = 5;
+                                style = 5;
+                            }
+                            mappedPosition = new MappedPosition(id, mapID, row, column, area, style, status);
+                        }
+                        count++;
+                        points.push(mappedPosition);
+                    }
+                }
+                return points;
+            }
+        
+            var sheet = document.createElement('style'),
+                $rangeInput = $('.range input'),
+                prefs = ['webkit-slider-runnable-track', 'moz-range-track', 'ms-track'];
+        
+            document.body.appendChild(sheet);
+        
+            var getTrackStyle = function (el) {
+                var curVal = el.value,
+                    val = (curVal - 1) * 30.666666667,
+                    style = '';
+                // Set active label
+                $('.range-labels li').removeClass('active selected');
+        
+                var curLabel = $('.range-labels').find('li:nth-child(' + curVal + ')');
+        
+                curLabel.addClass('active selected');
+                curLabel.prevAll().addClass('selected');
+            }
+        
+            $rangeInput.on('input', function () {
+                sheet.textContent = getTrackStyle(this);
+            });
+        
+            $('.range-labels li').on('click', function () {
+                var index = $(this).index();
+                $rangeInput.val(index + 1).trigger('input');
+        
+            });
+        </script>
