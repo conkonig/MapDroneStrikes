@@ -1,0 +1,32 @@
+id,area
+1,Bajaur Agency
+2,Damadola
+3,Khyber Agency
+4,Orakzai Agency
+5,Kurram Agency
+6,Datta Khel
+7,Ghulam Khan
+8,Mohammad Khal
+9,Machi Khel
+10,Danda Darpakhel
+11,North Waziristan
+12,Boya
+13,Jani Khel
+14,Mir Ali
+15,Miranshah
+16,Qutab Khel
+17,Haider Khel
+18,Khushali
+19,Khesoor
+20,Ladha
+21,Makeen
+22,Shawal
+23,South Waziristan
+24,Wana
+25,Kari Kot
+26,Shin Warsak
+27,Azam Warsak
+28,Angor Adda
+29,Sheerani
+30,Sur Pul
+31,Ahmad Wals
