@@ -7,10 +7,8 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="stylesheet" type="text/css" href="timeline.css">
     <link rel="stylesheet" href="https://use.typekit.net/wnq7ptb.css">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfWT1nSPYqfrsAjVIIL2yTbFJ9UwhVozE"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfWT1nSPYqfrsAjVIIL2yTbFJ9UwhVozE"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 </head>
@@ -19,47 +17,43 @@
         height: 90%;
     }
 </style>
-
-<body>
-    <!-- https://multimedia.thenational.ae/assets/visual_assets/pakistan_drone_visual -->
-    <div class="hex-map-visualisation">
-        <div class="page visual-map" ng-app="myApp" ng-controller="myController" id="myController">
-            <div class="headerWrap">
-                <div class="" id="visual-title">Dronestrikes in Northwest Pakistan <div class="unboldDate">
-                        <div class="dateHeader"></div><button class="incrementTime"><i class="fa fa-play"></i></button>
-                    </div>
+<!-- https://multimedia.thenational.ae/assets/visual_assets/pakistan_drone_visual -->
+<div class="hex-map-visualisation">
+    <div class="page visual-map" ng-app="myApp" ng-controller="myController" id="myController">
+        <div class="headerWrap">
+            <div class="" id="visual-title">Dronestrikes in Northwest Pakistan <div class="unboldDate">
+                    <div class="dateHeader"></div><button class="incrementTime"><i class="fa fa-play"></i></button>
                 </div>
             </div>
-            <div id="map"></div>
-            <div class="visual-component">
-                <div class="inner-panel">
-                    <div class="inner-controls">
-                        <div class="range">
-                            <input type="range" min="1" max="14" steps="1" value="1" id="yearSlider">
-                        </div>
-                        <ul class="range-labels">
-                            <li>2004</li>
-                            <li>2005</li>
-                            <li>2006</li>
-                            <li>2007</li>
-                            <li>2008</li>
-                            <li>2009</li>
-                            <li>2010</li>
-                            <li>2011</li>
-                            <li>2012</li>
-                            <li>2013</li>
-                            <li>2014</li>
-                            <li>2015</li>
-                            <li>2016</li>
-                            <li>2017</li>
-                        </ul>
+        </div>
+        <div id="map"></div>
+        <div class="visual-component">
+            <div class="inner-panel">
+                <div class="inner-controls">
+                    <div class="range">
+                        <input type="range" min="1" max="14" steps="1" value="1" id="yearSlider">
                     </div>
+                    <ul class="range-labels">
+                        <li>2004</li>
+                        <li>2005</li>
+                        <li>2006</li>
+                        <li>2007</li>
+                        <li>2008</li>
+                        <li>2009</li>
+                        <li>2010</li>
+                        <li>2011</li>
+                        <li>2012</li>
+                        <li>2013</li>
+                        <li>2014</li>
+                        <li>2015</li>
+                        <li>2016</li>
+                        <li>2017</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
-    </div>
-</body>
+</div>
 <script>
     var app = angular.module('myApp', []);
     app.controller('myController', ['$scope', '$window', '$http', function ($scope, $window, $http) {
@@ -81,9 +75,18 @@
                 initMap(getStrikesByLocationAndYear(currentYear));
             });
     }]);
-    function getRandomArbitrary(min, max) {
-        return Math.random() * (max - min) + min;
-    }
+
+    $(function () {
+        $('#yearSlider').on('input', function (ev) {
+            window.currentYear = parseInt(this.value) + 2003;
+            let strikesOfYear = getStrikesByLocationAndYear(currentYear);
+            console.log("Strikes of " + currentYear, strikesOfYear)
+            initMap(getStrikesByLocationAndYear(currentYear));
+            $(".dateHeader").html(currentYear);
+            angular.element('#myController').scope().$apply();
+        });
+    });
+
     var markers = [];
 
     window.infowindow = new google.maps.InfoWindow({
@@ -91,6 +94,43 @@
     });
 
     window.changedDate = 0;
+
+    var timerActive = true;
+    var i = 0;
+    var intervalID = window.setInterval(playButton, 500);
+    var sheet = document.createElement('style'),
+        $rangeInput = $('.range input'),
+        prefs = ['webkit-slider-runnable-track', 'moz-range-track', 'ms-track'];
+
+    document.body.appendChild(sheet);
+
+    var getTrackStyle = function (el) {
+        var curVal = el.value,
+            val = (curVal - 1) * 30.666666667,
+            style = '';
+        $('.range-labels li').removeClass('active selected');
+        var curLabel = $('.range-labels').find('li:nth-child(' + curVal + ')');
+        curLabel.addClass('active selected');
+        curLabel.prevAll().addClass('selected');
+    }
+
+    $rangeInput.on('input', function () {
+        sheet.textContent = getTrackStyle(this);
+    });
+
+    $('.range-labels li').on('click', function () {
+        var index = $(this).index();
+        $rangeInput.val(index + 1).trigger('input');
+    });
+
+    $(".incrementTime").click(function () {
+        if ($('.actv').length) {
+            $(document).find(".incrementTime").removeClass("actv");
+            $(".incrementTime").html('<i class="fa fa-play"></i>');
+        } else {
+            $(document).find(".incrementTime").addClass("actv");
+        }
+    });
 
     function initMap(currentYearStrikes) {
         var infowindow = new google.maps.InfoWindow({
@@ -118,29 +158,8 @@
                 setInterval(addMarkerWithTimeout(latLongCoordinates[counter], summaries[counter]), 100);
                 counter++;
             });
-
-            // while (latLongCoordinates.length) {
-            //     latLongCoordinates.pop();
-            //     summaries.pop();
-            //     counter = 0;
-            // }
-
         });
     }
-
-    $(function () {
-        $('#yearSlider').on('input', function (ev) {
-            window.currentYear = parseInt(this.value) + 2003;
-            let strikesOfYear = getStrikesByLocationAndYear(currentYear);
-            console.log("Strikes of "+ currentYear, strikesOfYear)
-            initMap(getStrikesByLocationAndYear(currentYear));
-            $(".dateHeader").html(currentYear);
-            angular.element('#myController').scope().$apply();
-        });
-    });
-
-    var timerActive = true;
-    var i = 0;
 
     function addMarkerWithTimeout(position, summary) {
         var icon = {
@@ -169,6 +188,65 @@
         func();
     }
 
+    function playButton() {
+        if ($('.actv').length) {
+            $(".incrementTime").html('<i class="fa fa-pause"></i>');
+            currentYear = parseInt(currentYear);
+            currentYear += 1;
+            $(".dateHeader").html(currentYear);
+            window.currentYear = currentYear;
+            mappedCurrentDate = currentYear - 2003;
+            document.getElementById("yearSlider").stepUp(1);
+            angular.element('#myController').scope().$apply();
+            if (currentYear == 2017) {
+                // currentYear = 2004;
+                // $(".dateHeader").html(currentYear);
+                // initMap(getStrikesByYear(currentYear));
+                $(".incrementTime").html('<i class="fa fa-play"></i>');
+                $(document).find(".incrementTime").removeClass("actv");
+                $rangeInput.val(1).trigger('input');
+            }
+            removeAllMarkers();
+            initMap(getStrikesByLocationAndYear(currentYear));
+        }
+    }
+
+    function getLocations(strikesOfYear) {
+        let locations = [];
+        strikesOfYear.forEach(element => {
+            if (locations.includes(element.location) === false) {
+                locations.push(element.location);
+            }
+        });
+        return locations;
+    }
+
+    function getStrikesByLocationAndYear(year) {
+        let locationList = getLocations(getStrikesByYear(year));
+        let priorArray = getStrikesByYear(year);
+        let returnArray = [];
+        locationList.forEach(location => {
+            let localArray = [];
+            priorArray.forEach(strike => {
+                if (location == strike.location) {
+                    localArray.push(strike);
+                }
+            });
+            returnArray.push(localArray);
+        });
+        return returnArray;
+    }
+
+    function getStrikesByYear(year) {
+        let returnArray = [];
+        strikes.forEach(element => {
+            if (element.date == year) {
+                returnArray.push(element);
+            }
+        });
+        return returnArray;
+    }
+
     function removeAllMarkers() {
         if (markers.length > 0) {
             for (var i = 0; i < markers.length; i++) {
@@ -176,13 +254,6 @@
             }
         }
         markers = [];
-    }
-
-    function sortStrikeCountByLocation(strikeID) {
-        var element = strikes[strikeID];
-        stringSummary = '';
-        stringSummary = element.exactdate;
-        return stringSummary;
     }
 
     function getStrikeSummary(strikeID) {
@@ -211,80 +282,12 @@
         return stringSummary;
     }
 
-    var intervalID = window.setInterval(playButton, 500);
-
-    $(".incrementTime").click(function () {
-        if ($('.actv').length) {
-            $(document).find(".incrementTime").removeClass("actv");
-            $(".incrementTime").html('<i class="fa fa-play"></i>');
-        } else {
-            $(document).find(".incrementTime").addClass("actv");
-        }
-    });
-
-    function playButton() {
-        if ($('.actv').length) {
-            $(".incrementTime").html('<i class="fa fa-pause"></i>');
-            currentYear = parseInt(currentYear);
-            currentYear += 1;
-            $(".dateHeader").html(currentYear);
-            window.currentYear = currentYear;
-            mappedCurrentDate = currentYear - 2003;
-            document.getElementById("yearSlider").stepUp(1);
-            angular.element('#myController').scope().$apply();
-            if (currentYear == 2017) {
-                currentYear = 2004;
-                $(".dateHeader").html(currentYear);
-                initMap(getStrikesByYear(currentYear));
-                $(".incrementTime").html('<i class="fa fa-play"></i>');
-                $(document).find(".incrementTime").removeClass("actv");
-
-                $rangeInput.val(index + 1).trigger('input');
-
-                $("#yearSlider").val(1);
-                $('#yearSlider').slider('refresh');
-            }
-            removeAllMarkers();
-            initMap(getStrikesByLocationAndYear(currentYear));
-        }
+    function sortStrikeCountByLocation(strikeID) {
+        var element = strikes[strikeID];
+        stringSummary = '';
+        stringSummary = element.exactdate;
+        return stringSummary;
     }
-
-    function getLocations(strikesOfYear) {
-        let locations = [];
-        strikesOfYear.forEach(element => {
-            if (locations.includes(element.location) === false) {
-                locations.push(element.location);
-            }
-        });
-        return locations;
-    }
-
-    function getStrikesByYear(year) {
-        let returnArray = [];
-        strikes.forEach(element => {
-            if (element.date == year) {
-                returnArray.push(element);
-            }
-        });
-        return returnArray;
-    }
-
-    function getStrikesByLocationAndYear(year) {
-        let locationList = getLocations(getStrikesByYear(year));
-        let priorArray = getStrikesByYear(year);
-        let returnArray = [];
-        locationList.forEach(location => {
-            let localArray = [];
-            priorArray.forEach(strike => {
-                if (location == strike.location) {
-                    localArray.push(strike);
-                }
-            });
-            returnArray.push(localArray);
-        });
-        return returnArray;
-    }
-
 
     function StrikeprovinceStrikeItem(id, date, mapRow, mapColumn, minDeaths, maxDeaths, minCivilianDeaths, maxCivilianDeaths, minChildDeaths, maxChildDeaths, mapIndex, tileIndex, summary, counter) {
         this.id = id;
@@ -320,30 +323,9 @@
         return strikeprovinceStrikeItems;
     }
 
-    var sheet = document.createElement('style'),
-        $rangeInput = $('.range input'),
-        prefs = ['webkit-slider-runnable-track', 'moz-range-track', 'ms-track'];
-
-    document.body.appendChild(sheet);
-
-    var getTrackStyle = function (el) {
-        var curVal = el.value,
-            val = (curVal - 1) * 30.666666667,
-            style = '';
-        $('.range-labels li').removeClass('active selected');
-        var curLabel = $('.range-labels').find('li:nth-child(' + curVal + ')');
-        curLabel.addClass('active selected');
-        curLabel.prevAll().addClass('selected');
+    function getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
     }
-
-    $rangeInput.on('input', function () {
-        sheet.textContent = getTrackStyle(this);
-    });
-
-    $('.range-labels li').on('click', function () {
-        var index = $(this).index();
-        $rangeInput.val(index + 1).trigger('input');
-    });
 
 </script>
 
