@@ -1,0 +1,1 @@
+Drone Strikes Map Visual
