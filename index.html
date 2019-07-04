@@ -1,0 +1,393 @@
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Drone Strikes in Pakistan</title>
+    <meta name="description" content="Angular JS Hexagonal Grid by Connor @ connorstansfield.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="styles4.css">
+    <link rel="stylesheet" type="text/css" href="timeline.css">
+    <link rel="stylesheet" href="https://use.typekit.net/wnq7ptb.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfWT1nSPYqfrsAjVIIL2yTbFJ9UwhVozE&callback=initMap"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+</head>
+<style>
+    #map {
+        height: 90%;
+    }
+</style>
+
+
+<body>
+    <!-- https://multimedia.thenational.ae/assets/visual_assets/pakistan_drone_visual -->
+
+    <div class="hex-map-visualisation">
+
+        <div class="page visual-map" ng-app="myApp" ng-controller="myController" id="myController">
+            <div class="headerWrap">
+                <div class="" id="visual-title">Dronestrikes in Northwest Pakistan <div class="unboldDate"><div class="dateHeader"></div><button class="incrementTime"><i class="fa fa-play"></i></button></div>
+                </div>
+            </div>
+                 <div id="map"></div>
+                <div class="visual-component">
+                    <div class="inner-panel">
+                        <div class="inner-controls">
+                            <div class="range">
+                                <input type="range" min="1" max="14" steps="1" value="1" id="newLine">
+                            </div>
+                            <ul class="range-labels">
+                                <li>2004</li>
+                                <li>2005</li>
+                                <li>2006</li>
+                                <li>2007</li>
+                                <li>2008</li>
+                                <li>2009</li>
+                                <li>2010</li>
+                                <li>2011</li>
+                                <li>2012</li>
+                                <li>2013</li>
+                                <li>2014</li>
+                                <li>2015</li>
+                                <li>2016</li>
+                                <li>2017</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</body>
+<script>
+    var app = angular.module('myApp', []);
+    app.controller('myController', ['$scope', '$window', '$http', function ($scope, $window, $http) {
+                $(document).ready(function () {
+                            window.map = new google.maps.Map(document.getElementById('map'), {
+                                zoom: 8,
+                                center: { lat: 32.3, lng: 69.5 }
+                            });
+                        });
+                $http.get("./strikedata3.csv")
+                    .then(function (response) {
+
+                        $scope.strikes = processStrikeData(response.data);
+                        $window.strikes = $scope.strikes;
+
+                        $scope.timelineLabelStyle = { 'width': "" + (100 / 16) + "%" };
+
+                        $('.item-frame .item-frame-img').css('background-color', 'unset');
+                        $('.inner-controls').show();
+                        $('.inner-viewable .swipeable .swipeable-item .item-title').show();
+                        $('.inner-viewable .swipeable .swipeable-item .item-desc').show();
+
+                        $window.currentYear = 2004;
+                        $(".dateHeader").html(currentYear);
+                        initMap(getStrikesByLocationAndYear(currentYear));
+                    });
+    }]);
+    function getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
+    
+    }
+    var markers = [];
+
+    window.infowindow =  new google.maps.InfoWindow({
+            content: ''
+        });
+
+    window.changedDate = 0; 
+
+        // var timerForDropMarkers = timer(1000, dropMarker)
+
+        // onYearChange({
+            // timeforDropMarkers.stop();
+            // allArraysPertainingToPrevYear = [];
+
+            // newArray = getyear();
+            // timer.start();
+
+        // })
+    var timer;
+    function initMap(currentYearStrikes) {
+        // removeMarker();
+        var infowindow =  new google.maps.InfoWindow({
+            content: ''
+        });
+
+        currentYearStrikes.forEach(function (arrayOfArrays) {
+            var latlongcoord = [];
+            var counter = 0;
+            var summaries = [];
+            removeMarker();
+
+            arrayOfArrays.forEach(function (point) {
+                casualtySummary = getStrikeSummary(arrayOfArrays[i]);
+                console.log(casualtySummary);
+                var contentString = "<h1 class='areaName'>" + arrayOfArrays[i]['location'] + "</h1><br>" + arrayOfArrays[i]['exactdate'] + "&nbsp;&nbsp;" + casualtySummary;
+                var randomizer = getRandomArbitrary(-0.1, 0.1);
+                var randomizerTwo = getRandomArbitrary(-0.1, 0.1);
+                var centerPos = { lat: parseFloat(arrayOfArrays[i]['latitude']) + randomizer, lng: parseFloat(arrayOfArrays[i]['longitude']) + randomizerTwo};
+                latlongcoord.push(centerPos);
+                summaries.push(contentString);
+                setInterval(addMarkerWithTimeout(latlongcoord[counter], summaries[counter]), 100);
+                // counter += 1;
+                // innerCounter += 1;
+                // timer = setInterval(addMarkerWithTimeout(latlongcoord[counter], summaries[counter]), 5000);
+            });
+            while (latlongcoord.length) {
+                latlongcoord.pop();
+                summaries.pop();
+                counter = 0;
+            }
+        });       
+    }
+
+    $(function () {
+        $('#newLine').on('input', function (ev) {
+            // resetTimer();
+            window.currentYear = parseInt(this.value) + 2003;
+            // var timer = setInterval(addMarkerWithTimeout(latlongcoord[counter], summaries[counter]), 100);
+            // var timer = setInterval(initMap(getStrikesByLocationAndYear(currentYear)), 5000);
+            initMap(getStrikesByLocationAndYear(currentYear));
+            // removeMarker();
+            mappedCurrentDate = currentYear - 2003;
+            let progWidth = (mappedCurrentDate / 14 * 100);
+
+            $(".dateHeader").html(currentYear);
+            $('#rangeProg').css('width', progWidth + '%');
+            $('#rangeProg').css('width', 'calc(' + progWidth + '% + 2px)');
+            angular.element('#myController').scope().$apply();
+        });
+    });
+
+
+    var timerActive = true; 
+    var i = 0; 
+
+    function addMarkerWithTimeout(position, summary) {
+            var icon = {
+                url: "./drone1283.png", // url
+                scaledSize: new google.maps.Size(50, 50), // scaled size
+                origin: new google.maps.Point(0,0), // origin
+                anchor: new google.maps.Point(0, 0) // anchor
+            };
+            var func = function() {
+                console.log("running");
+
+                var marker = new google.maps.Marker({
+                    position: position,
+                    map: map,
+                    animation: google.maps.Animation.DROP,
+                    icon: icon
+                });
+
+                markers.push(marker);
+
+                google.maps.event.addListener(marker, 'click', function() {
+                    infowindow.setContent(summary);
+                    infowindow.open(map, marker);
+                    map.panTo(marker.position);
+                    map.setZoom(8);
+                });
+                console.log(markers);
+            // }
+        }
+
+        func();
+    } 
+
+    function removeMarker() {
+        if (markers.length > 0) {
+            for (var i=0; i<markers.length; i++) {
+                markers[i].setMap(null);
+            }
+        }
+        markers = [];
+    }
+
+    function sortStrikeCountByLocation(strikeID) {
+        var element = strikes[strikeID];
+        stringSummary = '';
+        stringSummary = element.exactdate;
+        return stringSummary;
+    }
+
+    function getStrikeSummary(strikeID) {
+        var element = strikeID;
+
+        intMinDeaths = parseInt(element.minDeaths);
+        intMaxDeaths = parseInt(element.maxDeaths);
+        intMaxCivDeaths = parseInt(element.minCivilianDeaths);
+        intMaxChildDeaths = parseInt(element.maxChildDeaths);
+        stringSummary = '';
+        if (intMaxDeaths < 1) {
+            stringSummary = "No casualties reported";
+        }
+        else if (intMaxDeaths > 0) {
+            if (intMaxCivDeaths > 0) {
+                if (intMaxChildDeaths > 0) {
+                    stringSummary = "Maximum number of " + intMaxChildDeaths + " children dead, maximum of " + intMaxCivDeaths + " civilians killed, " + intMaxDeaths + " total killed";
+                }
+                else if (intMaxChildDeaths < 1) {
+                    stringSummary = "Maximum of " + intMaxCivDeaths + " civilians killed, " + intMaxDeaths + " total killed";
+                }
+            }
+            else if (intMaxCivDeaths < 1) {
+                stringSummary = "No civilian casualties, " + intMaxDeaths + " total killed";
+            }
+        }
+        return stringSummary;
+    }
+
+    var intervalID = window.setInterval(playButton, 500);
+
+    $(".incrementTime").click(function () {
+        if ($('.actv').length) {
+            $(document).find(".incrementTime").removeClass("actv");
+            $(".incrementTime").html('<i class="fa fa-play"></i>');
+        } else {
+            $(document).find(".incrementTime").addClass("actv");
+        }
+    });
+
+    function playButton() {
+        // var is2004 = 1; 
+        if ($('.actv').length) {
+            $(".incrementTime").html('<i class="fa fa-pause"></i>');
+
+            currentYear = parseInt(currentYear);
+            currentYear += 1;
+            $(".dateHeader").html(currentYear);
+            window.currentYear = currentYear;
+            mappedCurrentDate = currentYear - 2003;
+            document.getElementById("newLine").stepUp(1);
+            progWidthLocal = (mappedCurrentDate / 14 * 100);
+            $('#rangeProg').css('width', progWidthLocal + '%');
+            $('#rangeProg').css('width', 'calc(' + progWidthLocal + '% + 2px)');
+            angular.element('#myController').scope().$apply();
+            let progWidth = (mappedCurrentDate / 14 * 100);
+            if (currentYear == 2017) {
+                currentYear = 2004;
+                $(".dateHeader").html(currentYear);
+                initMap(getStrikesByYear(currentYear));
+                $(".incrementTime").html('<i class="fa fa-play"></i>');
+                $(document).find(".incrementTime").removeClass("actv");
+                $("#newLine").val(1);
+                $('#newLine').slider('refresh');
+            }
+            removeMarker();
+            initMap(getStrikesByLocationAndYear(currentYear));
+
+        }
+    }
+
+    function getLocations(strikesOfYear) {
+        let locations = [];
+        strikesOfYear.forEach(element => {
+            if (locations.includes(element.location) === false) {
+                locations.push(element.location);
+            }
+        });
+        return locations;
+    }
+
+    function getStrikesByYear(year) {
+        let returnArray = [];
+        strikes.forEach(element => {
+            if (element.date == year) {
+                returnArray.push(element);
+            }
+        });
+        return returnArray;
+    }
+
+    function getStrikesByLocationAndYear(year) {
+        let locationList = getLocations(getStrikesByYear(year));
+        let priorArray = getStrikesByYear(year);
+        let returnArray = [];
+
+        locationList.forEach(location => {
+            let localArray = [];
+            priorArray.forEach(strike => {
+            if (location == strike.location) {
+                localArray.push(strike);
+            }
+        });    
+        returnArray.push(localArray);
+        });    
+        return returnArray;
+
+    }
+
+ 
+    function StrikePoint(id, date, mapRow, mapColumn, minDeaths, maxDeaths, minCivilianDeaths, maxCivilianDeaths, minChildDeaths, maxChildDeaths, mapIndex, tileIndex, summary, counter) {
+        this.id = id;
+        this.date = date;
+        this.mapRow = mapRow;
+        this.mapColumn = mapColumn;
+        this.minDeaths = minDeaths;
+        this.maxDeaths = maxDeaths;
+        this.minCivilianDeaths = minCivilianDeaths;
+        this.maxCivilianDeaths = maxCivilianDeaths;
+        this.minChildDeaths = minChildDeaths;
+        this.maxChildDeaths = maxChildDeaths;
+        this.mapIndex = mapIndex;
+        this.tileIndex = tileIndex;
+        this.summary = summary;
+        this.counter = counter;
+    }
+
+    function processStrikeData(allStrikeData) {
+        let allTextLines = allStrikeData.split(/\r\n|\n/);
+        let headers = allTextLines[0].split(',');
+        let count = 0;
+        let strikePoints = [];
+        for (let i = 1; i < allTextLines.length; i++) {
+            let data = allTextLines[i].split(',');
+            let strikePoint = new StrikePoint(count, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+            for (let j = 0; j < headers.length; j++) {
+                strikePoint[headers[j]] = data[j];
+            }
+            count++;
+            strikePoints.push(strikePoint);
+        }
+        return strikePoints;
+    }
+
+
+    var sheet = document.createElement('style'),
+        $rangeInput = $('.range input'),
+        prefs = ['webkit-slider-runnable-track', 'moz-range-track', 'ms-track'];
+
+    document.body.appendChild(sheet);
+
+    var getTrackStyle = function (el) {
+        var curVal = el.value,
+            val = (curVal - 1) * 30.666666667,
+            style = '';
+        // Set active label
+        $('.range-labels li').removeClass('active selected');
+
+        var curLabel = $('.range-labels').find('li:nth-child(' + curVal + ')');
+
+        curLabel.addClass('active selected');
+        curLabel.prevAll().addClass('selected');
+    }
+
+    $rangeInput.on('input', function () {
+        sheet.textContent = getTrackStyle(this);
+    });
+
+    // Change input value on label click
+    $('.range-labels li').on('click', function () {
+        var index = $(this).index();
+        $rangeInput.val(index + 1).trigger('input');
+
+    });
+</script>
+
+</html>

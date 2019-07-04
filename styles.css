@@ -108,6 +108,8 @@ li {
     display: inline-block;
     line-height: 20px;
     text-align: left;
+    font-family: "acumin-pro-extra-condensed",sans-serif !important;
+    
 }
 .hex-map-visualisation .visual-information .title-sections .target .target-figures .remain,
 .hex-map-visualisation .visual-information .title-sections-mobile .target .target-figures .remain {
@@ -117,6 +119,7 @@ li {
     text-align: left;
     font-size: 25px;
     margin-left: 20px;
+    font-family: "acumin-pro-extra-condensed",sans-serif !important
 }    
 
 
@@ -627,7 +630,7 @@ li {
     transition-duration: 0.4s;
     cursor: pointer; */
     border-radius: 4px; 
-    font-family: "acumin-pro-extra-condensed";
+    font-family: "AcuminProCond-Bold";
   }
 
   .fa-play {
@@ -711,10 +714,12 @@ li {
     float: right;
     font-size: 60px;
     text-decoration: underline;
-    right: -5%;
+    right: 0%;
     z-index: 100;
-    border-radius: 25px;
+    border-radius: 25px 0px 0px 25px;
     top: 13%;
+    pointer-events: none;
+
   }
 
 .dateHeader {
@@ -726,6 +731,9 @@ li {
     top: 7.5%;
     z-index: 100;
     color: white !important;
+    pointer-events: none;
+    font-family: "acumin-pro-extra-condensed",sans-serif !important;
+
 }
 @media only screen and (max-width: 785px) {
     .rectWrapper {
@@ -742,11 +750,11 @@ li {
         top: 63%;
         margin-left: 57%;
     }
+
     #afghanistanTitle {
         margin-left: 26%;
         top: 30%;
     }
-
     .dateHeader {
         display: none;
     }
