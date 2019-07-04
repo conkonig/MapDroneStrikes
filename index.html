@@ -5,7 +5,6 @@
     <meta name="description" content="Angular JS Hexagonal Grid by Connor @ connorstansfield.com">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <link rel="stylesheet" type="text/css" href="timeline.css">
     <link rel="stylesheet" href="https://use.typekit.net/wnq7ptb.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfWT1nSPYqfrsAjVIIL2yTbFJ9UwhVozE"></script>
@@ -72,7 +71,7 @@
                 $('.inner-controls').show();
                 $window.currentYear = 2004;
                 $(".dateHeader").html(currentYear);
-                initMap(getStrikesByLocationAndYear(currentYear));
+                initMapForYear(getStrikesByLocationAndYear(currentYear));
             });
     }]);
 
@@ -81,23 +80,54 @@
             window.currentYear = parseInt(this.value) + 2003;
             let strikesOfYear = getStrikesByLocationAndYear(currentYear);
             console.log("Strikes of " + currentYear, strikesOfYear)
-            initMap(getStrikesByLocationAndYear(currentYear));
+            initMapForYear(getStrikesByLocationAndYear(currentYear));
             $(".dateHeader").html(currentYear);
             angular.element('#myController').scope().$apply();
         });
     });
 
-    var markers = [];
-
     window.infowindow = new google.maps.InfoWindow({
         content: ''
     });
 
-    window.changedDate = 0;
-
     var timerActive = true;
-    var i = 0;
-    var intervalID = window.setInterval(playButton, 500);
+    var markersAreAnimated = false;
+    var currentMarkerIndex = -1;
+    var markers = [];
+    var markersToDrop = [];
+    const animateMarkerTimer = setInterval(animateMarker, 1200);
+    const animateYears = window.setInterval(function() {
+        if ($('.actv').length) {
+            $(".incrementTime").html('<i class="fa fa-pause"></i>');
+            currentYear = parseInt(currentYear);
+            currentYear += 1;
+            $(".dateHeader").html(currentYear);
+            window.currentYear = currentYear;
+            mappedCurrentDate = currentYear - 2003;
+            document.getElementById("yearSlider").stepUp(1);
+            angular.element('#myController').scope().$apply();
+            if (currentYear == 2017) {
+                // currentYear = 2004;
+                // $(".dateHeader").html(currentYear);
+                // initMapForYear(getStrikesByYear(currentYear));
+                $(".incrementTime").html('<i class="fa fa-play"></i>');
+                $(document).find(".incrementTime").removeClass("actv");
+                $rangeInput.val(1).trigger('input');
+            }
+
+            checkStrikesDone = new Promise(function(resolve, reject) {
+                if (markersAreAnimated) {
+                    resolve(console.log("array done"));
+                } 
+                else {
+                    reject(currentYear+=1)
+                }
+            });
+
+            removeAllMarkers();
+            initMapForYear(getStrikesByLocationAndYear(currentYear), true);
+        }
+    }, 3000);
     var sheet = document.createElement('style'),
         $rangeInput = $('.range input'),
         prefs = ['webkit-slider-runnable-track', 'moz-range-track', 'ms-track'];
@@ -132,36 +162,41 @@
         }
     });
 
-    function initMap(currentYearStrikes) {
+    function animateMarker(){
+        if(window.markersAreAnimated){
+            ++window.currentMarkerIndex;
+            console.log("tick tock ", currentMarkerIndex);
+            if (window.currentMarkerIndex < window.markersToDrop.length) {
+                addMarkerToMap(markersToDrop[currentMarkerIndex].position, markersToDrop[currentMarkerIndex].summary)
+            }
+            else if (window.currentMarkerIndex < window.markersToDrop.length) {
+                // markersAreAnimated = false;
+            }
+        }
+    }
+
+    function initMapForYear(currentYearStrikes) {
         var infowindow = new google.maps.InfoWindow({
             content: ''
         });
-
+        markersToDrop = [];
+        currentMarkerIndex = -1;
+        removeAllMarkers();
+        markersAreAnimated = true;
         currentYearStrikes.forEach(function (provinceStrikes) {
-            var latLongCoordinates = [];
-            var counter = 0;
-            var summaries = [];
-            removeAllMarkers();
-
-            // for this year
-            // promise resolves after each province in the year
-
             provinceStrikes.forEach(function (provinceStrikeItem) {
                 casualtySummary = getStrikeSummary(provinceStrikeItem);
-                // console.log(casualtySummary);
                 var contentString = "<h1 class='areaName'>" + provinceStrikeItem['location'] + "</h1><br>" + provinceStrikeItem['exactdate'] + "&nbsp;&nbsp;" + casualtySummary;
                 var randomizer = getRandomArbitrary(-0.1, 0.1);
                 var randomizerTwo = getRandomArbitrary(-0.1, 0.1);
                 var centerPos = { lat: parseFloat(provinceStrikeItem['latitude']) + randomizer, lng: parseFloat(provinceStrikeItem['longitude']) + randomizerTwo };
-                latLongCoordinates.push(centerPos);
-                summaries.push(contentString);
-                setInterval(addMarkerWithTimeout(latLongCoordinates[counter], summaries[counter]), 100);
-                counter++;
+                markersToDrop.push({position: centerPos, summary: contentString});
             });
         });
+        console.log("Array building finished");
     }
 
-    function addMarkerWithTimeout(position, summary) {
+    function addMarkerToMap(position, summary) {
         var icon = {
             url: "./drone128.png", // url
             scaledSize: new google.maps.Size(50, 50), // scaled size
@@ -176,6 +211,11 @@
                 icon: icon
             });
 
+
+            infowindow.setContent(summary);
+            infowindow.open(map, marker);
+            map.panTo(marker.position);
+
             markers.push(marker);
 
             google.maps.event.addListener(marker, 'click', function () {
@@ -185,30 +225,9 @@
                 map.setZoom(8);
             });
         }
-        func();
-    }
 
-    function playButton() {
-        if ($('.actv').length) {
-            $(".incrementTime").html('<i class="fa fa-pause"></i>');
-            currentYear = parseInt(currentYear);
-            currentYear += 1;
-            $(".dateHeader").html(currentYear);
-            window.currentYear = currentYear;
-            mappedCurrentDate = currentYear - 2003;
-            document.getElementById("yearSlider").stepUp(1);
-            angular.element('#myController').scope().$apply();
-            if (currentYear == 2017) {
-                // currentYear = 2004;
-                // $(".dateHeader").html(currentYear);
-                // initMap(getStrikesByYear(currentYear));
-                $(".incrementTime").html('<i class="fa fa-play"></i>');
-                $(document).find(".incrementTime").removeClass("actv");
-                $rangeInput.val(1).trigger('input');
-            }
-            removeAllMarkers();
-            initMap(getStrikesByLocationAndYear(currentYear));
-        }
+
+        func();
     }
 
     function getLocations(strikesOfYear) {

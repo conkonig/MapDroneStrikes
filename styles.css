@@ -68,6 +68,9 @@ li {
 .hex-map-visualisation .keys li {
     padding: 16px 14px;
 }  
+.range {
+  display: none;
+}
 
 .range input {
   width: 100%;
@@ -145,7 +148,7 @@ li {
   width: 7%;
   text-align: center;
   color: #b2b2b2;
-  font-size: 18px;
+  font-size: 30px;
   cursor: pointer;
 }
 
@@ -170,7 +173,7 @@ li {
   padding-top: 0px;
   border-radius: 4px;
   font-family: "AcuminProCond-Bold";
-  display: inline-block;
+  display: none;
 }
 
 .fa-play {
@@ -445,7 +448,7 @@ tbody {
 .visual-component {
   background: #464646;
   position: absolute;
-  bottom: 0;
+  bottom: -55px;
 }
 .visual-component .inner-panel {
   width: 55%;
