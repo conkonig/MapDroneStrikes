@@ -19,33 +19,12 @@
   font-weight: 500;
 }
 
-.unbold {
-  font-weight: 450;
-}
-
 .headerWrap {
   width: 100%;
   text-align: center;
   position: absolute;
   top: 0;
   z-index: 1000;
-}
-
-.legend {
-  background: rgb(128, 128, 128, 0.14);
-  width: 13%;
-  height: 37%;
-  position: absolute;
-  right: 0;
-  bottom: 24%;
-  border-radius: 20px 0px 0px 20px;
-  text-align: right;
-  font-family: "acumin-pro-extra-condensed", sans-serif !important;
-}
-
-.legend-label {
-  text-align: center;
-  margin: 2% auto;
 }
 
 .hex-map-visualisation h1,
@@ -55,12 +34,6 @@
 .hex-map-visualisation p,
 li {
   font-family: "acumin-pro-extra-condensed", "sans-serif";
-}
-
-.hex-map-visualisation .clear:after {
-  content: "";
-  display: block;
-  clear: both;
 }
 
 .hex-map-visualisation #visual-title {
