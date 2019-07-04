@@ -65,6 +65,10 @@ li {
   margin-bottom: 0.6rem;
 }
 
+.hex-map-visualisation .keys li {
+    padding: 16px 14px;
+}  
+
 .range input {
   width: 100%;
   top: 2px;
@@ -254,6 +258,10 @@ li {
   text-align: center;
   margin-left: 3%;
   line-height: 20px;
+}
+
+tbody {
+    text-align: center !important;
 }
 
 .bombed-label {
