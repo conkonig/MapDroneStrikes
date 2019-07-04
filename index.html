@@ -19,12 +19,9 @@
     }
 </style>
 
-
 <body>
     <!-- https://multimedia.thenational.ae/assets/visual_assets/pakistan_drone_visual -->
-
     <div class="hex-map-visualisation">
-
         <div class="page visual-map" ng-app="myApp" ng-controller="myController" id="myController">
             <div class="headerWrap">
                 <div class="" id="visual-title">Dronestrikes in Northwest Pakistan <div class="unboldDate"><div class="dateHeader"></div><button class="incrementTime"><i class="fa fa-play"></i></button></div>
@@ -71,7 +68,7 @@
                                 center: { lat: 32.3, lng: 69.5 }
                             });
                         });
-                $http.get("./strikedata3.csv")
+                $http.get("./strikedata.csv")
                     .then(function (response) {
 
                         $scope.strikes = processStrikeData(response.data);
