@@ -6,6 +6,19 @@
   width: 100%;
 }
 
+.btn-year{
+    background-color: transparent;
+    color: #fff;
+    padding: 5px 15px 8px;
+    border-color: aqua;
+    border-radius: 8px;
+    font-family: "acumin-pro-condensed", "sans-serif";
+    margin: 0px 5px 5px 0px;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 18px;
+}
+
 .hex-map-visualisation::-webkit-scrollbar {
   width: 0;
   height: 0;
@@ -446,10 +459,10 @@ tbody {
 }
 
 .visual-component {
-  background: #464646;
-  position: absolute;
-  bottom: -55px;
-}
+    background: #464646;
+    width: 100%;
+  }
+
 .visual-component .inner-panel {
   width: 55%;
   padding: 30px 3px;
@@ -460,6 +473,7 @@ tbody {
 
 .visual-component .inner-controls {
   display: none;
+  text-align: center;
   cursor: default;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -489,11 +503,6 @@ tbody {
   color: black;
 }
 
-.visual-component {
-  background: #464646;
-  margin-top: 3%;
-  width: 100%;
-}
 .visual-component .inner-panel {
   width: 70%;
   padding: 30px 3px;
